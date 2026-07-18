@@ -1,0 +1,28 @@
+# Java
+target/
+*.class
+*.jar
+*.war
+*.log
+
+# Node
+node_modules/
+dist/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Uploads (头像/新闻图片太大)
+uploads/
+
+# 配置文件含密钥，不提交。组员复制 template 后改名为 application.yaml
+smartcampus-back/src/main/resources/application.yaml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Maven wrapper jar (optional, can keep or ignore)
+# .mvn/wrapper/maven-wrapper.jar
