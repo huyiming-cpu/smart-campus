@@ -20,6 +20,12 @@ uploads/
 # 配置文件含密钥，不提交。组员复制 template 后改名为 application.yaml
 smartcampus-back/src/main/resources/application.yaml
 
+# Archives & backups
+*.zip
+*.rar
+*副本*/
+* - 副本*/
+
 # OS
 .DS_Store
 Thumbs.db
