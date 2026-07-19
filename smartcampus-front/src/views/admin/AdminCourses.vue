@@ -1,41 +1,48 @@
 <template>
-  <div class="page"><h3>📚 课程综合管理</h3>
-    <div style="margin-bottom:12px">选课开关：<el-switch v-model="selectOpen" @change="onToggleSelect" active-text="开启" inactive-text="关闭"/></div>
-    <el-tabs v-model="tab">
-      <el-tab-pane label="课程列表" name="courses"/>
-      <el-tab-pane label="排课分配" name="schedules"/>
-      <el-tab-pane label="学生选课" name="enrollment"/>
-    </el-tabs>
+  <div class="page">
+    <div class="page-head">
+      <div class="page-icon" style="background:linear-gradient(135deg,#0EA5E9,#0284C7);"><el-icon :size="20" color="#fff"><Reading /></el-icon></div>
+      <div><h2 class="page-title">课程综合管理</h2><p class="page-desc">管理课程信息、排课分配与学生选课</p></div>
+    </div>
+    <div class="toolbar">
+      <div style="margin-bottom:12px">选课开关：<el-switch v-model="selectOpen" @change="onToggleSelect" active-text="开启" inactive-text="关闭"/></div>
+      <el-tabs v-model="tab">
+        <el-tab-pane label="课程列表" name="courses"/>
+        <el-tab-pane label="排课分配" name="schedules"/>
+        <el-tab-pane label="学生选课" name="enrollment"/>
+      </el-tabs>
+    </div>
     <!-- 课程 -->
-    <div v-if="tab==='courses'">
+    <div class="card" v-if="tab==='courses'" v-loading="cLoading">
       <el-button type="primary" size="small" @click="openCourse()" style="margin-bottom:12px">新增课程</el-button>
-      <el-table :data="courses" v-loading="cLoading" border size="small">
+      <el-table :data="courses" stripe border size="small">
         <el-table-column prop="courseCode" label="代码" width="80"/><el-table-column prop="courseName" label="名称" min-width="150"/>
         <el-table-column prop="credit" label="学分" width="60"/><el-table-column prop="hours" label="学时" width="60"/>
         <el-table-column prop="courseType" label="类型" width="70"/><el-table-column prop="department" label="学院" width="100"/>
-        <el-table-column label="操作" width="120"><template #default="{row}"><el-button size="small" @click="openCourse(row)">编辑</el-button><el-button size="small" type="danger" @click="delCourse(row.id)">删除</el-button></template></el-table-column>
+        <el-table-column label="操作" width="140"><template #default="{row}"><el-button size="small" type="primary" plain @click="openCourse(row)">编辑</el-button><el-button size="small" type="danger" plain @click="delCourse(row.id)">删除</el-button></template></el-table-column>
       </el-table>
     </div>
     <!-- 排课 -->
-    <div v-if="tab==='schedules'">
+    <div class="card" v-if="tab==='schedules'" v-loading="sLoading">
       <el-button type="primary" size="small" @click="openSchedule()" style="margin-bottom:12px">新增排课</el-button>
-      <el-table :data="schedules" v-loading="sLoading" border size="small">
-        <el-table-column label="课程" width="180"><template #default="{row}">{{ row.courseName||getCourseName(row.courseId) }}<br/><small style="color:#999">{{ getCourseCode(row.courseId) }}</small></template></el-table-column>
-        <el-table-column label="教师" width="80"><template #default="{row}">{{ row.teacherName||getTeacherName(row.teacherId) }}</template></el-table-column>
-        <el-table-column prop="semester" label="学期" width="110"/><el-table-column prop="className" label="班级" width="100"/>
-        <el-table-column label="时间" width="120"><template #default="{row}">{{ ['','周一','周二','周三','周四','周五'][row.weekday] }} {{ row.sectionStart }}-{{ row.sectionEnd }}节</template></el-table-column>
-        <el-table-column prop="classroom" label="教室" width="100"/>
-        <el-table-column label="操作" width="80"><template #default="{row}"><el-button size="small" type="danger" @click="delSchedule(row.id)">删除</el-button></template></el-table-column>
+      <el-table :data="schedules" stripe border size="small">
+        <el-table-column label="课程" min-width="180"><template #default="{row}">{{ row.courseName||getCourseName(row.courseId) }}<br/><small style="color:#999">{{ getCourseCode(row.courseId) }}</small></template></el-table-column>
+        <el-table-column label="教师" width="100"><template #default="{row}">{{ row.teacherName||getTeacherName(row.teacherId) }}</template></el-table-column>
+        <el-table-column prop="semester" label="学期" width="120"/><el-table-column prop="className" label="班级" min-width="120"/>
+        <el-table-column label="时间" min-width="140"><template #default="{row}">{{ ['','周一','周二','周三','周四','周五'][row.weekday] }} {{ row.sectionStart }}-{{ row.sectionEnd }}节</template></el-table-column>
+        <el-table-column prop="classroom" label="教室" min-width="120"/>
+        <el-table-column label="操作" width="100" fixed="right"><template #default="{row}"><el-button size="small" type="danger" plain @click="delSchedule(row.id)">删除</el-button></template></el-table-column>
       </el-table>
     </div>
     <!-- 选课 -->
-    <div v-if="tab==='enrollment'">
+    <div class="card" v-if="tab==='enrollment'" v-loading="eLoading">
       <el-button type="primary" size="small" @click="enrollDv=true" style="margin-bottom:12px">为学生选课</el-button>
-      <el-table :data="enrollments" v-loading="eLoading" border size="small">
-        <el-table-column label="学生" width="80"><template #default="{row}">{{ getName(row.studentId) }}</template></el-table-column>
-        <el-table-column prop="scheduleId" label="排课ID" width="80"/><el-table-column prop="semester" label="学期" width="110"/>
-        <el-table-column label="状态" width="80"><template #default="{row}"><el-tag size="small">{{ row.status }}</el-tag></template></el-table-column>
-        <el-table-column label="操作" width="80"><template #default="{row}"><el-button v-if="row.status==='ENROLLED'" size="small" type="danger" @click="drop(row.id)">退课</el-button></template></el-table-column>
+      <el-table :data="enrollments" stripe border size="small">
+        <el-table-column label="学生" min-width="120"><template #default="{row}">{{ getName(row.studentId) }}</template></el-table-column>
+        <el-table-column prop="scheduleId" label="排课ID" width="100"/><el-table-column prop="semester" label="学期" min-width="130"/>
+        <el-table-column label="状态" width="100"><template #default="{row}"><el-tag size="small">{{ row.status }}</el-tag></template></el-table-column>
+        <el-table-column label="成绩" width="80"><template #default="{row}">{{ row.score ?? '-' }}</template></el-table-column>
+        <el-table-column label="操作" width="100" fixed="right"><template #default="{row}"><el-button v-if="row.status==='ENROLLED'" size="small" type="danger" plain @click="drop(row.id)">退课</el-button></template></el-table-column>
       </el-table>
     </div>
 
@@ -83,6 +90,7 @@
 import { ref, onMounted } from 'vue'
 import request from '@/utils/request'
 import { ElMessage } from 'element-plus'
+import { Reading } from '@element-plus/icons-vue'
 const tab=ref('courses'),courses=ref([]),cLoading=ref(false),schedules=ref([]),sLoading=ref(false),enrollments=ref([]),eLoading=ref(false)
 const users=ref([]),teachers=ref([]),classes=ref([]),rooms=ref([])
 const getName=(id)=>{const u=users.value.find(x=>x.id===id);return u?u.name:id}
@@ -118,4 +126,12 @@ const doEnroll=async()=>{try{await request.post('/api/admin/enroll',ef.value);El
 const drop=async(id)=>{try{await request.put(`/api/admin/student-courses/${id}/drop`);ElMessage.success('已退课');loadEnrollments()}catch{}}
 onMounted(loadAll)
 </script>
-<style scoped>.page{padding:20px}h3{margin-bottom:16px}</style>
+<style scoped>
+.page{padding:20px 24px;max-width:1200px;margin:0 auto;font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",system-ui,sans-serif}
+.page-head{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.page-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.page-title{font-size:20px;font-weight:700;margin:0;line-height:1.3;color:#1a1a2e}
+.page-desc{font-size:13px;color:#8c8c8c;margin:2px 0 0}
+.toolbar{margin-bottom:16px}
+.card{border:1px solid #EEF0F4;border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.02);background:#fff}
+</style>

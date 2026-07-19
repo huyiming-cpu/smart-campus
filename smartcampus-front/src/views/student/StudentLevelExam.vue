@@ -1,12 +1,13 @@
 <template>
-  <div class="level-exam-page">
-    <div class="page-header">
-      <h2>等级考试</h2>
+  <div class="page">
+    <div class="page-head">
+      <div class="page-icon" style="background:linear-gradient(135deg,#5B9BD5,#4A8AD4);"><el-icon :size="20" color="#fff"><Document /></el-icon></div>
+      <div><h2 class="page-title">等级考试</h2><p class="page-desc">英语四六级等全国等级考试报名与管理</p></div>
     </div>
 
-    <el-card shadow="never">
-      <template #header><strong>可报名的考试</strong></template>
-      <el-table :data="availableExams" stripe v-loading="examLoading" empty-text="暂无可报名的考试">
+    <div class="card" style="margin-bottom:20px">
+      <div class="section-title">可报名的考试</div>
+      <el-table :data="availableExams" stripe v-loading="examLoading" empty-text="暂无可报名的考试" style="margin-top:12px">
         <el-table-column prop="examName" label="考试名称" min-width="140" />
         <el-table-column prop="examDate" label="考试日期" width="120" />
         <el-table-column prop="fee" label="报名费" width="100">
@@ -30,11 +31,11 @@
           </template>
         </el-table-column>
       </el-table>
-    </el-card>
+    </div>
 
-    <el-card shadow="never" style="margin-top: 20px">
-      <template #header><strong>我的报名记录</strong></template>
-      <el-table :data="myRegistrations" stripe v-loading="regLoading" empty-text="暂无报名记录">
+    <div class="card">
+      <div class="section-title">我的报名记录</div>
+      <el-table :data="myRegistrations" stripe v-loading="regLoading" empty-text="暂无报名记录" style="margin-top:12px">
         <el-table-column prop="examName" label="考试名称" min-width="140" />
         <el-table-column prop="examDate" label="考试日期" width="120" />
         <el-table-column prop="fee" label="报名费" width="100">
@@ -51,7 +52,7 @@
           </template>
         </el-table-column>
       </el-table>
-    </el-card>
+    </div>
   </div>
 </template>
 
@@ -59,6 +60,7 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { listLevelExams, registerLevelExam, getMyExamRegistrations } from '@/api/exam'
+import { Document } from '@element-plus/icons-vue'
 
 const availableExams = ref([])
 const myRegistrations = ref([])
@@ -122,7 +124,11 @@ onMounted(() => loadAll())
 </script>
 
 <style scoped>
-.level-exam-page { max-width: 1000px; }
-.page-header { margin-bottom: 20px; }
-.page-header h2 { margin: 0; font-size: 20px; }
+.page{padding:20px 24px;max-width:1000px;margin:0 auto;font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",system-ui,sans-serif}
+.page-head{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.page-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(91,155,213,.25)}
+.page-title{font-size:20px;font-weight:700;color:#1A1A2E;margin:0}
+.page-desc{font-size:13px;color:#9CA3AF;margin:2px 0 0}
+.card{background:#fff;border:1px solid #EEF0F4;border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.02)}
+.section-title{font-weight:700;font-size:15px;color:#1A1A2E;padding-bottom:12px;border-bottom:1px solid #EEF0F4}
 </style>

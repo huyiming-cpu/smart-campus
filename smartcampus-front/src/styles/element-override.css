@@ -1,0 +1,218 @@
+/* ==========================================
+   Element Plus 全局样式覆盖
+   智慧校园蓝色简约设计体系
+   主色: #5B9BD5
+   ========================================== */
+
+/* ----- CSS 变量覆盖（需在 Element Plus 之前加载）----- */
+:root {
+  --el-color-primary: #5B9BD5;
+  --el-color-primary-light-3: #7DB5E0;
+  --el-color-primary-light-5: #A3CEEC;
+  --el-color-primary-light-7: #C9E2F5;
+  --el-color-primary-light-8: #DCEBF9;
+  --el-color-primary-light-9: #EBF3FC;
+  --el-color-primary-dark-2: #4A8AD4;
+  --el-color-success: #10B981;
+  --el-color-warning: #F59E0B;
+  --el-color-danger: #EF4444;
+  --el-color-info: #6B7280;
+  --el-border-radius-base: 8px;
+  --el-border-radius-small: 6px;
+}
+
+/* ==========================================
+   按钮样式
+   ========================================== */
+
+.el-button {
+  font-weight: 450;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+}
+
+/* Primary 实心按钮 */
+.el-button--primary {
+  background: #5B9BD5 !important;
+  border-color: #5B9BD5 !important;
+  color: #fff !important;
+}
+.el-button--primary:hover {
+  background: #4A8AD4 !important;
+  border-color: #4A8AD4 !important;
+  box-shadow: 0 4px 12px rgba(91, 155, 213, 0.3) !important;
+}
+.el-button--primary:active {
+  background: #3A7AC4 !important;
+  border-color: #3A7AC4 !important;
+}
+
+/* Primary plain（替代默认编辑按钮） */
+.el-button--primary.is-plain {
+  background: #EBF3FC !important;
+  border-color: #C4D9F0 !important;
+  color: #5B9BD5 !important;
+}
+.el-button--primary.is-plain:hover {
+  background: #DCEBF9 !important;
+  border-color: #5B9BD5 !important;
+  color: #4A8AD4 !important;
+}
+
+/* Danger 实心按钮 */
+.el-button--danger {
+  background: #EF4444 !important;
+  border-color: #EF4444 !important;
+}
+.el-button--danger:hover {
+  background: #DC2626 !important;
+  border-color: #DC2626 !important;
+}
+
+/* Danger plain（替代默认删除按钮，更柔和） */
+.el-button--danger.is-plain {
+  background: #FEF2F2 !important;
+  border-color: #FECACA !important;
+  color: #EF4444 !important;
+}
+.el-button--danger.is-plain:hover {
+  background: #FEE2E2 !important;
+  border-color: #EF4444 !important;
+  color: #DC2626 !important;
+}
+
+/* Default 按钮 */
+.el-button--default {
+  background: #fff !important;
+  border-color: #D1D5DB !important;
+  color: #4B5563 !important;
+}
+.el-button--default:hover {
+  background: #F9FAFB !important;
+  border-color: #9CA3AF !important;
+  color: #1F2937 !important;
+}
+
+/* Success */
+.el-button--success {
+  background: #10B981 !important;
+  border-color: #10B981 !important;
+}
+.el-button--success:hover {
+  background: #059669 !important;
+  border-color: #059669 !important;
+}
+
+/* small 尺寸优化 */
+.el-button--small {
+  padding: 5px 14px;
+  font-size: 12px;
+  border-radius: 6px;
+  height: 30px;
+}
+
+/* 表格内操作按钮 */
+.el-table .el-button--small {
+  padding: 4px 11px;
+  font-size: 12px;
+  height: 28px;
+  border-radius: 5px;
+}
+.el-table__body .el-button + .el-button {
+  margin-left: 6px;
+}
+
+/* 对话框底部 */
+.el-dialog__footer .el-button {
+  min-width: 80px;
+  border-radius: 8px;
+  padding: 8px 22px;
+}
+
+/* ==========================================
+   表单 / 输入
+   ========================================== */
+.el-input__wrapper,
+.el-select .el-input__wrapper,
+.el-textarea__inner {
+  border-radius: 8px !important;
+}
+.el-input__wrapper:hover,
+.el-select .el-input__wrapper:hover {
+  box-shadow: 0 0 0 1px #C4D9F0 inset !important;
+}
+
+/* ==========================================
+   对话框
+   ========================================== */
+.el-dialog {
+  border-radius: 14px;
+  overflow: hidden;
+}
+.el-dialog__header {
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid #F3F4F6;
+  margin-right: 0;
+}
+.el-dialog__body {
+  padding: 20px 24px;
+}
+.el-dialog__footer {
+  padding: 12px 24px 18px;
+  border-top: 1px solid #F3F4F6;
+}
+
+/* ==========================================
+   表格
+   ========================================== */
+.el-table {
+  border-radius: 10px;
+  overflow: hidden;
+}
+.el-table th.el-table__cell {
+  background: #F8FAFE;
+  color: #4B5563;
+  font-weight: 600;
+  font-size: 13px;
+}
+.el-table--border .el-table__cell {
+  border-right: 1px solid #EEF0F4;
+}
+
+/* ==========================================
+   标签
+   ========================================== */
+.el-tag {
+  border-radius: 5px;
+  font-weight: 450;
+}
+
+/* ==========================================
+   分页
+   ========================================== */
+.el-pager li {
+  border-radius: 6px;
+}
+
+/* ==========================================
+   标签页
+   ========================================== */
+.el-tabs__item {
+  font-weight: 450;
+}
+.el-tabs__item.is-active {
+  color: #5B9BD5;
+  font-weight: 600;
+}
+.el-tabs__active-bar {
+  background-color: #5B9BD5;
+}
+
+/* ==========================================
+   卡片
+   ========================================== */
+.el-card {
+  border-radius: 14px;
+  border: 1px solid #EEF0F4;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}

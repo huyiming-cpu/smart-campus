@@ -1,18 +1,26 @@
 <template>
-  <div class="page"><h3>🔬 实验室管理</h3>
-    <el-select v-model="dept" @change="load" placeholder="全部学院" clearable style="width:200px;margin-bottom:12px">
-      <el-option v-for="d in depts" :key="d" :label="d" :value="d"/>
-    </el-select>
-    <el-button type="primary" size="small" @click="openAdd" style="margin-left:8px">新增实验室</el-button>
-    <el-table :data="list" v-loading="loading" border size="small" style="margin-top:12px">
-      <el-table-column prop="labName" label="名称" min-width="150"/><el-table-column prop="labCode" label="代码" width="80"/>
-      <el-table-column prop="labType" label="类型" width="80"/><el-table-column prop="department" label="学院" width="100"/>
-      <el-table-column prop="location" label="位置" width="100"/><el-table-column prop="capacity" label="容量" width="60"/>
-      <el-table-column label="主要设备" min-width="200"><template #default="{row}">{{ getAssets(row.id) }}</template></el-table-column>
-      <el-table-column prop="managerName" label="负责人" width="80"/>
-      <el-table-column label="状态" width="70"><template #default="{row}"><el-tag :type="row.status==='OPEN'?'success':'warning'" size="small">{{ row.status==='OPEN'?'开放':'维护' }}</el-tag></template></el-table-column>
-      <el-table-column label="操作" width="120"><template #default="{row}"><el-button size="small" @click="openEdit(row)">编辑</el-button><el-button size="small" type="danger" @click="del(row.id)">删除</el-button></template></el-table-column>
-    </el-table>
+  <div class="page">
+    <div class="page-head">
+      <div class="page-icon" style="background:linear-gradient(135deg,#0EA5E9,#0284C7);"><el-icon :size="20" color="#fff"><Monitor /></el-icon></div>
+      <div><h2 class="page-title">实验室管理</h2><p class="page-desc">管理校园实验室资源，支持多学院筛选与设备关联</p></div>
+    </div>
+    <div class="toolbar">
+      <el-select v-model="dept" @change="load" placeholder="全部学院" clearable style="width:200px">
+        <el-option v-for="d in depts" :key="d" :label="d" :value="d"/>
+      </el-select>
+      <el-button type="primary" size="small" @click="openAdd" style="margin-left:8px">新增实验室</el-button>
+    </div>
+    <div class="card" v-loading="loading">
+      <el-table :data="list" stripe border size="small">
+        <el-table-column prop="labName" label="名称" min-width="150"/><el-table-column prop="labCode" label="代码" width="80"/>
+        <el-table-column prop="labType" label="类型" width="80"/><el-table-column prop="department" label="学院" width="100"/>
+        <el-table-column prop="location" label="位置" width="100"/><el-table-column prop="capacity" label="容量" width="60"/>
+        <el-table-column label="主要设备" min-width="200"><template #default="{row}">{{ getAssets(row.id) }}</template></el-table-column>
+        <el-table-column prop="managerName" label="负责人" width="80"/>
+        <el-table-column label="状态" width="70"><template #default="{row}"><el-tag :type="row.status==='OPEN'?'success':'warning'" size="small">{{ row.status==='OPEN'?'开放':'维护' }}</el-tag></template></el-table-column>
+        <el-table-column label="操作" width="140"><template #default="{row}"><el-button size="small" type="primary" plain @click="openEdit(row)">编辑</el-button><el-button size="small" type="danger" plain @click="del(row.id)">删除</el-button></template></el-table-column>
+      </el-table>
+    </div>
     <el-dialog :title="isEdit?'编辑实验室':'新增实验室'" v-model="dv" width="550px">
       <el-form :model="f" label-width="80px">
         <el-form-item label="名称"><el-input v-model="f.labName"/></el-form-item>
@@ -33,6 +41,7 @@
 import { ref, onMounted } from 'vue'
 import request from '@/utils/request'
 import { ElMessage } from 'element-plus'
+import { Monitor } from '@element-plus/icons-vue'
 const list=ref([]),loading=ref(false),assets=ref([]),dept=ref(''),depts=['计算机学院','经管学院','理学院','校办']
 const dv=ref(false),isEdit=ref(false),eid=ref(null),f=ref({})
 const getAssets=(labId)=>{const items=assets.value.filter(a=>a.labId===labId);return items.length?items.map(a=>a.assetName).join('、'):'无'}
@@ -43,4 +52,12 @@ const save=async()=>{try{if(isEdit.value)await request.put(`/api/admin/labs/${ei
 const del=async(id)=>{try{await request.delete(`/api/admin/labs/${id}`);ElMessage.success('已删除');load()}catch{}}
 onMounted(load)
 </script>
-<style scoped>.page{padding:20px}h3{margin-bottom:16px}</style>
+<style scoped>
+.page{padding:20px 24px;max-width:1200px;margin:0 auto;font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",system-ui,sans-serif}
+.page-head{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.page-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.page-title{font-size:20px;font-weight:700;margin:0;line-height:1.3;color:#1a1a2e}
+.page-desc{font-size:13px;color:#8c8c8c;margin:2px 0 0}
+.toolbar{margin-bottom:16px}
+.card{border:1px solid #EEF0F4;border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.02);background:#fff}
+</style>

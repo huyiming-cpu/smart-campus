@@ -1,11 +1,13 @@
 <template>
-  <div class="consultation-page">
-    <div class="page-header">
-      <h2>心理咨询预约</h2>
+  <div class="page">
+    <div class="page-head">
+      <div class="page-icon" style="background:linear-gradient(135deg,#5B9BD5,#4A8AD4);"><el-icon :size="20" color="#fff"><ChatDotRound /></el-icon></div>
+      <div><h2 class="page-title">心理咨询预约</h2><p class="page-desc">在线预约心理咨询服务</p></div>
+    </div>
+    <div class="toolbar">
       <el-button type="primary" @click="openDialog">预约咨询</el-button>
     </div>
-
-    <el-card shadow="never" v-loading="loading">
+    <div class="card" v-loading="loading">
       <el-table :data="consultations" stripe empty-text="暂无预约记录">
         <el-table-column prop="consultantName" label="咨询师" width="120" />
         <el-table-column prop="date" label="预约日期" width="120" />
@@ -18,9 +20,8 @@
         </el-table-column>
         <el-table-column prop="createTime" label="预约时间" width="180" />
       </el-table>
-    </el-card>
+    </div>
 
-    <!-- 预约弹窗 -->
     <el-dialog v-model="dialogVisible" title="心理咨询预约" width="500px" :close-on-click-modal="false">
       <el-form :model="form" label-width="90px">
         <el-form-item label="咨询师">
@@ -54,6 +55,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { listMyConsultations, bookConsultation } from '@/api/student'
+import { ChatDotRound } from '@element-plus/icons-vue'
 
 const consultations = ref([])
 const loading = ref(false)
@@ -122,7 +124,11 @@ onMounted(() => loadData())
 </script>
 
 <style scoped>
-.consultation-page { max-width: 900px; }
-.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.page-header h2 { margin: 0; font-size: 20px; }
+.page{padding:20px 24px;max-width:1200px;margin:0 auto;font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",system-ui,sans-serif}
+.page-head{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.page-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(91,155,213,.25)}
+.page-title{font-size:20px;font-weight:700;color:#1A1A2E;margin:0}
+.page-desc{font-size:13px;color:#9CA3AF;margin:2px 0 0}
+.toolbar{margin-bottom:16px;display:flex;justify-content:flex-end}
+.card{background:#fff;border:1px solid #EEF0F4;border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.02)}
 </style>

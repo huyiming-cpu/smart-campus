@@ -6,15 +6,15 @@
     </el-tabs>
     <div v-if="tab==='users'">
       <el-table :data="users" v-loading="uLoad" border size="small">
-        <el-table-column prop="id" label="ID" width="50"/><el-table-column prop="identityNumber" label="学号/工号" width="120"/>
-        <el-table-column prop="name" label="姓名" width="70"/><el-table-column prop="gender" label="性别" width="50"/>
-        <el-table-column prop="phone" label="电话" width="110"/><el-table-column prop="email" label="邮箱" width="150"/>
-        <el-table-column label="状态" width="70"><template #default="{row}"><el-tag :type="row.status==='NORMAL'?'success':'danger'" size="small">{{ row.status==='NORMAL'?'正常':row.status }}</el-tag></template></el-table-column>
-        <el-table-column label="操作" width="220">
+        <el-table-column prop="id" label="ID" width="60"/><el-table-column prop="identityNumber" label="学号/工号" width="130"/>
+        <el-table-column prop="name" label="姓名" width="80"/><el-table-column prop="gender" label="性别" width="60"/>
+        <el-table-column prop="phone" label="电话" width="120"/><el-table-column prop="email" label="邮箱" min-width="160"/>
+        <el-table-column label="状态" width="80"><template #default="{row}"><el-tag :type="row.status==='NORMAL'?'success':'danger'" size="small">{{ row.status==='NORMAL'?'正常':row.status }}</el-tag></template></el-table-column>
+        <el-table-column label="操作" width="240" fixed="right">
           <template #default="{row}">
-            <el-button size="small" @click="openEdit(row)">编辑</el-button>
+            <el-button size="small" type="primary" plain @click="openEdit(row)">编辑</el-button>
             <el-button size="small" @click="toggleLock(row)">{{ row.status==='LOCKED'?'解冻':'冻结' }}</el-button>
-            <el-button size="small" type="danger" @click="delUser(row.id)">删除</el-button>
+            <el-button size="small" type="danger" plain @click="delUser(row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -57,7 +57,10 @@
           <el-checkbox v-for="r in roles" :key="r.id" :label="r.roleCode" :value="r.roleCode">{{ r.roleName }}</el-checkbox>
         </el-checkbox-group>
       </div>
-      <template #footer><el-button @click="dv=false">取消</el-button><el-button type="primary" @click="saveUser" :loading="saving">保存</el-button></template>
+      <template #footer>
+        <el-button @click="dv=false">取消</el-button>
+        <el-button type="primary" @click="saveUser" :loading="saving">保存</el-button>
+      </template>
     </el-dialog>
 
     <el-dialog v-model="pwdDv" title="重置密码" width="350px">

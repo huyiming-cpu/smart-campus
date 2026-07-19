@@ -1,7 +1,10 @@
 <template>
-  <div class="scores-page">
-    <div class="page-header">
-      <h2>成绩查询</h2>
+  <div class="page">
+    <div class="page-head">
+      <div class="page-icon" style="background:linear-gradient(135deg,#5B9BD5,#4A8AD4);"><el-icon :size="20" color="#fff"><DataAnalysis /></el-icon></div>
+      <div><h2 class="page-title">成绩查询</h2><p class="page-desc">查看各学期课程成绩与学业概况</p></div>
+    </div>
+    <div class="toolbar">
       <el-select v-model="semester" placeholder="选择学期" @change="loadData" style="width: 200px">
         <el-option label="2025-2026-2" value="2025-2026-2" />
         <el-option label="2025-2026-1" value="2025-2026-1" />
@@ -11,29 +14,29 @@
     </div>
 
     <div class="overview-cards" v-loading="overviewLoading">
-      <el-card shadow="hover" class="stat-card">
+      <div class="stat-card">
         <div class="stat-num">{{ overview.totalCourses }}</div>
         <div class="stat-label">全部课程</div>
-      </el-card>
-      <el-card shadow="hover" class="stat-card">
+      </div>
+      <div class="stat-card">
         <div class="stat-num green">{{ overview.passed }}</div>
         <div class="stat-label">已通过</div>
-      </el-card>
-      <el-card shadow="hover" class="stat-card">
+      </div>
+      <div class="stat-card">
         <div class="stat-num red">{{ overview.failed }}</div>
         <div class="stat-label">未通过</div>
-      </el-card>
-      <el-card shadow="hover" class="stat-card">
+      </div>
+      <div class="stat-card">
         <div class="stat-num blue">{{ overview.avgScore }}</div>
         <div class="stat-label">平均成绩</div>
-      </el-card>
-      <el-card shadow="hover" class="stat-card" v-if="overview.gpa !== undefined">
+      </div>
+      <div class="stat-card" v-if="overview.gpa !== undefined">
         <div class="stat-num purple">{{ overview.gpa }}</div>
         <div class="stat-label">GPA</div>
-      </el-card>
+      </div>
     </div>
 
-    <el-card shadow="never" style="margin-top: 20px">
+    <div class="card" style="margin-top:20px">
       <el-table :data="scores" stripe v-loading="scoresLoading" empty-text="暂无成绩数据">
         <el-table-column prop="courseName" label="课程名称" min-width="180" />
         <el-table-column prop="score" label="成绩" width="100">
@@ -56,7 +59,7 @@
         </el-table-column>
         <el-table-column prop="semester" label="学期" width="130" />
       </el-table>
-    </el-card>
+    </div>
   </div>
 </template>
 
@@ -64,6 +67,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getMyScores, getCourseOverview } from '@/api/course'
+import { DataAnalysis } from '@element-plus/icons-vue'
 
 const semester = ref('2025-2026-2')
 const scores = ref([])
@@ -111,16 +115,21 @@ onMounted(() => loadData())
 </script>
 
 <style scoped>
-.scores-page { max-width: 1200px; }
-.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.page-header h2 { margin: 0; font-size: 20px; }
-.overview-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
-.stat-card { text-align: center; }
-.stat-num { font-size: 32px; font-weight: bold; color: #303133; }
-.stat-num.green { color: #67c23a; }
-.stat-num.red { color: #f56c6c; }
-.stat-num.blue { color: #409eff; }
-.stat-num.purple { color: #b37feb; }
-.stat-label { font-size: 14px; color: #909399; margin-top: 6px; }
-.fail-score { color: #f56c6c; font-weight: bold; }
+.page{padding:20px 24px;max-width:1200px;margin:0 auto;font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",system-ui,sans-serif}
+.page-head{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.page-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(91,155,213,.25)}
+.page-title{font-size:20px;font-weight:700;color:#1A1A2E;margin:0}
+.page-desc{font-size:13px;color:#9CA3AF;margin:2px 0 0}
+.toolbar{margin-bottom:16px;display:flex;justify-content:flex-end}
+.card{background:#fff;border:1px solid #EEF0F4;border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.02)}
+.overview-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
+.stat-card{background:#fff;border:1px solid #EEF0F4;border-radius:12px;padding:20px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.02);transition:box-shadow .2s}
+.stat-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.stat-num{font-size:32px;font-weight:bold;color:#303133}
+.stat-num.green{color:#67c23a}
+.stat-num.red{color:#f56c6c}
+.stat-num.blue{color:#409eff}
+.stat-num.purple{color:#b37feb}
+.stat-label{font-size:14px;color:#909399;margin-top:6px}
+.fail-score{color:#f56c6c;font-weight:bold}
 </style>

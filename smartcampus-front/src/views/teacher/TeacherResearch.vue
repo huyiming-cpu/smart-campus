@@ -1,198 +1,71 @@
 <template>
-  <div class="teacher-research">
-    <div class="page-header">
-      <h2>科研情况管理</h2>
-      <el-button type="primary" @click="openDialog()">新增科研项目</el-button>
+  <div class="page">
+    <div class="page-head">
+      <div class="page-icon" style="background:linear-gradient(135deg,#5B9BD5,#4A8AD4);"><el-icon :size="20" color="#fff"><DataAnalysis /></el-icon></div>
+      <div><h2 class="page-title">科研情况管理</h2><p class="page-desc">管理个人科研项目、成果与经费信息</p></div>
     </div>
-
-    <el-card v-loading="loading">
-      <el-table :data="researchList" border stripe>
-        <el-table-column prop="projectName" label="项目名称" min-width="180" show-overflow-tooltip />
-        <el-table-column prop="projectCode" label="项目编号" width="140" />
-        <el-table-column prop="projectType" label="项目类型" width="110" />
-        <el-table-column prop="fund" label="经费(万元)" width="110" />
-        <el-table-column label="开始日期" width="120">
-          <template #default="{ row }">{{ row.startDate?.substring(0, 10) || '-' }}</template>
-        </el-table-column>
-        <el-table-column label="结束日期" width="120">
-          <template #default="{ row }">{{ row.endDate?.substring(0, 10) || '-' }}</template>
-        </el-table-column>
-        <el-table-column prop="status" label="状态" width="90">
-          <template #default="{ row }">
-            <el-tag :type="statusTag(row.status)" size="small">{{ row.status || '-' }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="members" label="成员" min-width="140" show-overflow-tooltip />
-        <el-table-column prop="achievements" label="成果" min-width="160" show-overflow-tooltip />
-        <el-table-column label="操作" width="160" fixed="right">
-          <template #default="{ row }">
-            <el-button type="primary" link size="small" @click="openDialog(row)">编辑</el-button>
-            <el-button type="danger" link size="small" @click="handleDelete(row)">删除</el-button>
-          </template>
+    <div class="toolbar"><el-button type="primary" @click="openDialog()"><el-icon :size="16"><Plus /></el-icon> 新增科研项目</el-button></div>
+    <div class="card" v-loading="loading">
+      <el-table :data="list" border stripe>
+        <el-table-column prop="projectName" label="项目名称" min-width="190" show-overflow-tooltip/>
+        <el-table-column prop="projectCode" label="项目编号" width="150"/>
+        <el-table-column prop="projectType" label="项目类型" width="110"/>
+        <el-table-column label="经费(万)" width="110"><template #default="{row}">{{ row.fund }}</template></el-table-column>
+        <el-table-column label="开始" width="110"><template #default="{row}">{{ row.startDate?.slice(0,10) }}</template></el-table-column>
+        <el-table-column label="结束" width="110"><template #default="{row}">{{ row.endDate?.slice(0,10) }}</template></el-table-column>
+        <el-table-column label="状态" width="100"><template #default="{row}"><el-tag size="small" :type="row.status==='已完成'||row.status==='已结题'?'success':row.status==='暂停'?'warning':''">{{ row.status }}</el-tag></template></el-table-column>
+        <el-table-column prop="members" label="成员" min-width="150" show-overflow-tooltip/>
+        <el-table-column prop="achievements" label="成果" min-width="170" show-overflow-tooltip/>
+        <el-table-column label="操作" width="150" fixed="right">
+          <template #default="{row}"><el-button type="primary" plain size="small" @click="openDialog(row)">编辑</el-button><el-button type="danger" plain size="small" @click="handleDelete(row)">删除</el-button></template>
         </el-table-column>
       </el-table>
-    </el-card>
-
-    <!-- 新增/编辑弹窗 -->
-    <el-dialog v-model="dialogVisible" :title="isEdit ? '编辑科研项目' : '新增科研项目'" width="620px" @close="resetForm">
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="项目名称" prop="projectName">
-          <el-input v-model="form.projectName" placeholder="请输入项目名称" />
-        </el-form-item>
-        <el-form-item label="项目编号" prop="projectCode">
-          <el-input v-model="form.projectCode" placeholder="请输入项目编号" />
-        </el-form-item>
-        <el-form-item label="项目类型" prop="projectType">
-          <el-select v-model="form.projectType" placeholder="请选择项目类型" style="width:100%">
-            <el-option label="国家级" value="国家级" />
-            <el-option label="省部级" value="省部级" />
-            <el-option label="市厅级" value="市厅级" />
-            <el-option label="校级" value="校级" />
-            <el-option label="横向课题" value="横向课题" />
-            <el-option label="其他" value="其他" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="经费(万元)" prop="fund">
-          <el-input-number v-model="form.fund" :min="0" :precision="2" style="width:100%" />
-        </el-form-item>
+    </div>
+    <el-dialog v-model="dv" :title="editing?'编辑科研项目':'新增科研项目'" width="640px" @close="resetForm">
+      <el-form :model="form" :rules="rules" ref="formRef" label-width="90px">
+        <el-form-item label="项目名称" prop="projectName"><el-input v-model="form.projectName" placeholder="项目名称"/></el-form-item>
+        <el-form-item label="项目编号" prop="projectCode"><el-input v-model="form.projectCode" placeholder="项目编号"/></el-form-item>
         <el-row :gutter="16">
-          <el-col :span="12">
-            <el-form-item label="开始日期" prop="startDate">
-              <el-date-picker v-model="form.startDate" type="date" placeholder="选择日期" style="width:100%" value-format="YYYY-MM-DD" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="结束日期" prop="endDate">
-              <el-date-picker v-model="form.endDate" type="date" placeholder="选择日期" style="width:100%" value-format="YYYY-MM-DD" />
-            </el-form-item>
-          </el-col>
+          <el-col :span="12"><el-form-item label="项目类型"><el-select v-model="form.projectType" style="width:100%"><el-option v-for="t in types" :key="t" :label="t" :value="t"/></el-select></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="经费(万元)"><el-input-number v-model="form.fund" :min="0" :precision="2" style="width:100%"/></el-form-item></el-col>
         </el-row>
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="form.status" style="width:100%">
-            <el-option label="进行中" value="进行中" />
-            <el-option label="已完成" value="已完成" />
-            <el-option label="已结题" value="已结题" />
-            <el-option label="暂停" value="暂停" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="成员" prop="members">
-          <el-input v-model="form.members" type="textarea" :rows="2" placeholder="请输入项目成员，多人用逗号分隔" />
-        </el-form-item>
-        <el-form-item label="成果" prop="achievements">
-          <el-input v-model="form.achievements" type="textarea" :rows="3" placeholder="请输入项目成果描述" />
-        </el-form-item>
+        <el-row :gutter="16">
+          <el-col :span="12"><el-form-item label="开始日期"><el-date-picker v-model="form.startDate" type="date" placeholder="开始日期" style="width:100%" value-format="YYYY-MM-DD"/></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="结束日期"><el-date-picker v-model="form.endDate" type="date" placeholder="结束日期" style="width:100%" value-format="YYYY-MM-DD"/></el-form-item></el-col>
+        </el-row>
+        <el-row :gutter="16">
+          <el-col :span="12"><el-form-item label="状态"><el-select v-model="form.status" style="width:100%"><el-option v-for="s in statuses" :key="s" :label="s" :value="s"/></el-select></el-form-item></el-col>
+        </el-row>
+        <el-form-item label="成员"><el-input v-model="form.members" type="textarea" :rows="2" placeholder="项目成员，逗号分隔"/></el-form-item>
+        <el-form-item label="成果"><el-input v-model="form.achievements" type="textarea" :rows="2" placeholder="项目成果描述"/></el-form-item>
       </el-form>
-      <template #footer>
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" :loading="submitting" @click="handleSubmit">确定</el-button>
-      </template>
+      <template #footer><el-button @click="dv=false">取消</el-button><el-button type="primary" :loading="saving" @click="handleSave">确定</el-button></template>
     </el-dialog>
   </div>
 </template>
-
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { listMyResearch, saveResearch, updateResearch, deleteResearch } from '@/api/teacher'
 import { ElMessage, ElMessageBox } from 'element-plus'
-
-const loading = ref(false)
-const dialogVisible = ref(false)
-const isEdit = ref(false)
-const submitting = ref(false)
-const formRef = ref(null)
-const researchList = ref([])
-const editId = ref(null)
-
-const form = reactive({
-  projectName: '', projectCode: '', projectType: '', fund: null,
-  startDate: '', endDate: '', status: '', members: '', achievements: ''
-})
-
-const rules = {
-  projectName: [{ required: true, message: '请输入项目名称', trigger: 'blur' }],
-  projectCode: [{ required: true, message: '请输入项目编号', trigger: 'blur' }],
-  projectType: [{ required: true, message: '请选择项目类型', trigger: 'change' }],
-  status: [{ required: true, message: '请选择状态', trigger: 'change' }]
-}
-
-const statusTag = (status) => {
-  if (status === '进行中') return ''
-  if (status === '已完成' || status === '已结题') return 'success'
-  if (status === '暂停') return 'warning'
-  return 'info'
-}
-
-const loadData = async () => {
-  loading.value = true
-  try {
-    const res = await listMyResearch()
-    researchList.value = res.data || []
-  } catch { ElMessage.error('加载科研数据失败') }
-  finally { loading.value = false }
-}
-
-const openDialog = (row) => {
-  if (row) {
-    isEdit.value = true
-    editId.value = row.id
-    Object.assign(form, {
-      projectName: row.projectName || '',
-      projectCode: row.projectCode || '',
-      projectType: row.projectType || '',
-      fund: row.fund ?? null,
-      startDate: row.startDate || '',
-      endDate: row.endDate || '',
-      status: row.status || '',
-      members: row.members || '',
-      achievements: row.achievements || ''
-    })
-  } else {
-    isEdit.value = false
-    editId.value = null
-    resetForm()
-  }
-  dialogVisible.value = true
-}
-
-const resetForm = () => {
-  form.projectName = ''; form.projectCode = ''; form.projectType = ''
-  form.fund = null; form.startDate = ''; form.endDate = ''
-  form.status = ''; form.members = ''; form.achievements = ''
-  formRef.value?.resetFields()
-}
-
-const handleSubmit = async () => {
-  const valid = await formRef.value.validate().catch(() => false)
-  if (!valid) return
-  submitting.value = true
-  try {
-    if (isEdit.value) {
-      await updateResearch(editId.value, { ...form })
-      ElMessage.success('更新成功')
-    } else {
-      await saveResearch({ ...form })
-      ElMessage.success('新增成功')
-    }
-    dialogVisible.value = false
-    loadData()
-  } catch { ElMessage.error('操作失败') }
-  finally { submitting.value = false }
-}
-
-const handleDelete = async (row) => {
-  try {
-    await ElMessageBox.confirm(`确定删除项目"${row.projectName}"吗？此操作不可恢复。`, '删除确认', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' })
-    await deleteResearch(row.id)
-    ElMessage.success('删除成功')
-    loadData()
-  } catch { /* 取消或失败 */ }
-}
-
-onMounted(() => { loadData() })
+import { listMyResearch, saveResearch, updateResearch, deleteResearch } from '@/api/teacher'
+import { DataAnalysis, Plus } from '@element-plus/icons-vue'
+const list=ref([]), loading=ref(false), dv=ref(false), editing=ref(false), saving=ref(false), formRef=ref(null), editId=ref(null)
+const types=['国家级','省部级','市厅级','校级','横向课题','其他']
+const statuses=['进行中','已完成','已结题','暂停']
+const form=reactive({projectName:'',projectCode:'',projectType:'',fund:null,startDate:'',endDate:'',status:'',members:'',achievements:''})
+const rules={projectName:[{required:true,message:'请输入项目名称',trigger:'blur'}],projectCode:[{required:true,message:'请输入项目编号',trigger:'blur'}]}
+const load=async()=>{loading.value=true;try{const r=await listMyResearch();list.value=r.data||[]}catch{}finally{loading.value=false}}
+const openDialog=(row)=>{if(row){editing.value=true;editId.value=row.id;Object.assign(form,{...row})}else{editing.value=false;editId.value=null;Object.assign(form,{projectName:'',projectCode:'',projectType:'',fund:null,startDate:'',endDate:'',status:'',members:'',achievements:''})}dv.value=true}
+const resetForm=()=>{formRef.value?.resetFields()}
+const handleSave=async()=>{const valid=await formRef.value.validate().catch(()=>false);if(!valid)return;saving.value=true;try{if(editing.value){await updateResearch(editId.value,{...form})}else{await saveResearch({...form})}ElMessage.success(editing.value?'修改成功':'新增成功');dv.value=false;load()}catch{ElMessage.error('保存失败')}finally{saving.value=false}}
+const handleDelete=async(row)=>{try{await ElMessageBox.confirm(`确定删除"${row.projectName}"？`,'删除确认',{type:'warning'});await deleteResearch(row.id);ElMessage.success('已删除');load()}catch{}}
+onMounted(load)
 </script>
-
 <style scoped>
-.teacher-research { padding: 20px; max-width: 1200px; margin: 0 auto; }
-.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.page-header h2 { margin: 0; font-size: 20px; }
+.page{padding:20px 24px;max-width:1300px;margin:0 auto;font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",system-ui,sans-serif}
+.page-head{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.page-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(91,155,213,.25)}
+.page-title{font-size:20px;font-weight:700;color:#1A1A2E;margin:0}
+.page-desc{font-size:13px;color:#9CA3AF;margin:2px 0 0}
+.toolbar{margin-bottom:16px}
+.card{background:#fff;border:1px solid #EEF0F4;border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.02)}
 </style>

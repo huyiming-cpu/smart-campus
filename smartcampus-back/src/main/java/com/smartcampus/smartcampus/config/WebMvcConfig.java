@@ -10,6 +10,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 映射 /uploads/** 到文件系统的 uploads 目录
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:D:/software/smart-campus/uploads/");
+                .addResourceLocations("file:D:/Sum_Soft/sum_campus/smart-campus/uploads/");
     }
 }

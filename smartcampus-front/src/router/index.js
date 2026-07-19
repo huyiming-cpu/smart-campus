@@ -70,7 +70,6 @@ const AdminEnrollment = () => import('../views/admin/AdminEnrollment.vue')
 const AdminExams = () => import('../views/admin/AdminExams.vue')
 const AdminCards = () => import('../views/admin/AdminCards.vue')
 const AdminPayments = () => import('../views/admin/AdminPayments.vue')
-const AdminConfig = () => import('../views/admin/AdminConfig.vue')
 const AdminAssets = () => import('../views/admin/AdminAssets.vue')
 const AdminLabs = () => import('../views/admin/AdminLabs.vue')
 
@@ -97,6 +96,8 @@ const routes = [
       { path: 'competitions', component: StudentCompetitions },
       { path: 'consultation', component: StudentConsultation },
       { path: 'practice', component: StudentPractice },
+      { path: 'scores', component: StudentScores },
+      { path: 'schedule', component: StudentSchedule },
       { path: 'labs', component: StudentLabs },
       { path: 'graduation', component: StudentGraduation },
       { path: 'quick', component: StudentApplications },
@@ -154,7 +155,6 @@ const routes = [
       { path: 'exams', component: AdminExams },
       { path: 'cards', component: AdminCards },
       { path: 'payments', component: AdminPayments },
-      { path: 'config', component: AdminConfig },
       { path: 'assets', component: AdminAssets },
       { path: 'labs', component: AdminLabs },
     ] },

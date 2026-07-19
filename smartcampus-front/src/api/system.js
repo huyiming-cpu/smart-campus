@@ -2,10 +2,6 @@ import request from '../utils/request'
 
 // 仪表盘
 export const getDashboard = () => request.get('/api/admin/dashboard')
-// 系统配置
-export const listConfigs = (configType) => request.get('/api/admin/config', { params: { configType } })
-export const getConfig = (key) => request.get('/api/admin/config/key', { params: { key } })
-export const updateConfig = (id, configValue) => request.put(`/api/admin/config/${id}`, { configValue })
 // 日志
 export const listLoginLogs = (params) => request.get('/api/admin/logs/login', { params })
 // 资产

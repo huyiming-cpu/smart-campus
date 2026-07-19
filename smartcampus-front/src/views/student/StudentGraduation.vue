@@ -1,8 +1,11 @@
 <template>
   <div class="page">
-    <h3>🎓 毕业设计</h3>
-    <!-- 已有毕设 -->
-    <el-card v-if="design && design.id" v-loading="loading" style="margin-bottom:16px">
+    <div class="page-head">
+      <div class="page-icon" style="background:linear-gradient(135deg,#5B9BD5,#4A8AD4);"><el-icon :size="20" color="#fff"><School /></el-icon></div>
+      <div><h2 class="page-title">毕业设计</h2><p class="page-desc">毕设选题、指导老师分配与进度跟踪</p></div>
+    </div>
+
+    <div class="card" v-loading="loading" v-if="design && design.id && design.status!=='REJECTED' && !showForm" style="margin-bottom:16px">
       <el-descriptions :column="2" border>
         <el-descriptions-item label="状态"><el-tag :type="design.status==='APPROVED'||design.status==='IN_PROGRESS'?'success':design.status==='PENDING'?'warning':design.status==='REJECTED'?'danger':'info'">{{ design.status||'未知' }}</el-tag></el-descriptions-item>
         <el-descriptions-item label="指导老师">{{ design.teacherName||'未分配' }}</el-descriptions-item>
@@ -14,12 +17,11 @@
         <el-descriptions-item label="公告" :span="2" v-if="design.announcement"><div style="white-space:pre-wrap">{{ design.announcement }}</div></el-descriptions-item>
       </el-descriptions>
       <el-button v-if="design.status==='REJECTED'" type="primary" style="margin-top:12px" @click="showForm=true">重新提交</el-button>
-    </el-card>
+    </div>
 
-    <!-- 提交/修改毕设 -->
-    <el-card v-if="!design || !design.id || showForm || design.status==='REJECTED'">
-      <template #header><span style="font-weight:bold">{{ design?.id ? '修改毕业设计' : '提交毕业设计选题' }}</span></template>
-      <el-form :model="form" label-width="100px" style="max-width:500px">
+    <div class="card" v-if="!design || !design.id || showForm || design.status==='REJECTED'">
+      <div class="section-title">{{ design?.id ? '修改毕业设计' : '提交毕业设计选题' }}</div>
+      <el-form :model="form" label-width="100px" style="max-width:500px;margin-top:16px">
         <el-form-item label="选择指导老师">
           <el-select v-model="form.teacherId" placeholder="请选择老师" style="width:100%" filterable>
             <el-option v-for="t in teachers" :key="t.id" :label="t.name+' - '+t.title" :value="t.id"/>
@@ -29,7 +31,7 @@
         <el-form-item label="选题描述"><el-input v-model="form.topicDescription" type="textarea" :rows="4" placeholder="请描述你的毕业设计内容"/></el-form-item>
         <el-form-item><el-button type="primary" @click="submit" :loading="submitting">提交</el-button></el-form-item>
       </el-form>
-    </el-card>
+    </div>
   </div>
 </template>
 <script setup>
@@ -37,6 +39,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getMyDesign } from '@/api/teacher'
 import request from '@/utils/request'
+import { School } from '@element-plus/icons-vue'
 const loading=ref(false), design=ref(null), showForm=ref(false), submitting=ref(false), teachers=ref([])
 const form=reactive({teacherId:'', topicName:'', topicDescription:''})
 
@@ -59,4 +62,12 @@ const submit=async()=>{
 }
 onMounted(()=>{load();loadTeachers()})
 </script>
-<style scoped>.page{padding:20px;max-width:900px}h3{margin-bottom:16px}</style>
+<style scoped>
+.page{padding:20px 24px;max-width:900px;margin:0 auto;font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",system-ui,sans-serif}
+.page-head{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.page-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(91,155,213,.25)}
+.page-title{font-size:20px;font-weight:700;color:#1A1A2E;margin:0}
+.page-desc{font-size:13px;color:#9CA3AF;margin:2px 0 0}
+.card{background:#fff;border:1px solid #EEF0F4;border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.02)}
+.section-title{font-weight:700;font-size:15px;color:#1A1A2E;padding-bottom:12px;border-bottom:1px solid #EEF0F4;margin-bottom:4px}
+</style>

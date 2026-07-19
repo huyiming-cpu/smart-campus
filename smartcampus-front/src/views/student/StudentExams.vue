@@ -1,15 +1,17 @@
 <template>
-  <div class="exams-page">
-    <div class="page-header">
-      <h2>考试安排</h2>
+  <div class="page">
+    <div class="page-head">
+      <div class="page-icon" style="background:linear-gradient(135deg,#5B9BD5,#4A8AD4);"><el-icon :size="20" color="#fff"><Clock /></el-icon></div>
+      <div><h2 class="page-title">我的考试</h2><p class="page-desc">查看本学期考试安排详情</p></div>
+    </div>
+    <div class="toolbar">
       <el-select v-model="semester" @change="loadData" style="width: 200px">
         <el-option label="2025-2026-2" value="2025-2026-2" />
         <el-option label="2025-2026-1" value="2025-2026-1" />
         <el-option label="2024-2025-2" value="2024-2025-2" />
       </el-select>
     </div>
-
-    <el-card shadow="never" v-loading="loading">
+    <div class="card" v-loading="loading">
       <el-table :data="exams" stripe empty-text="暂无考试安排" :row-class-name="tableRowClassName">
         <el-table-column prop="examName" label="考试名称" min-width="160" />
         <el-table-column prop="courseName" label="考试课程" min-width="160" />
@@ -26,7 +28,7 @@
           </template>
         </el-table-column>
       </el-table>
-    </el-card>
+    </div>
   </div>
 </template>
 
@@ -34,6 +36,7 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getExamArrangements } from '@/api/exam'
+import { Clock } from '@element-plus/icons-vue'
 
 const semester = ref('2025-2026-2')
 const exams = ref([])
@@ -63,8 +66,12 @@ onMounted(() => loadData())
 </script>
 
 <style scoped>
-.exams-page { max-width: 1100px; }
-.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.page-header h2 { margin: 0; font-size: 20px; }
-:deep(.upcoming-row) { background-color: #fdf6ec !important; }
+.page{padding:20px 24px;max-width:1200px;margin:0 auto;font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",system-ui,sans-serif}
+.page-head{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.page-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(91,155,213,.25)}
+.page-title{font-size:20px;font-weight:700;color:#1A1A2E;margin:0}
+.page-desc{font-size:13px;color:#9CA3AF;margin:2px 0 0}
+.toolbar{margin-bottom:16px;display:flex;justify-content:flex-end}
+.card{background:#fff;border:1px solid #EEF0F4;border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.02)}
+:deep(.upcoming-row){background-color:#fdf6ec!important}
 </style>

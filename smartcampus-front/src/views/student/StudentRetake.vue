@@ -1,10 +1,10 @@
 <template>
-  <div class="retake-page">
-    <div class="page-header">
-      <h2>补考重修</h2>
+  <div class="page">
+    <div class="page-head">
+      <div class="page-icon" style="background:linear-gradient(135deg,#5B9BD5,#4A8AD4);"><el-icon :size="20" color="#fff"><EditPen /></el-icon></div>
+      <div><h2 class="page-title">补考重修</h2><p class="page-desc">查看未通过课程，申请补考或重修</p></div>
     </div>
-
-    <el-card shadow="never" v-loading="loading">
+    <div class="card" v-loading="loading">
       <el-table :data="retakes" stripe empty-text="暂无未通过课程">
         <el-table-column prop="courseName" label="课程名称" min-width="160" />
         <el-table-column prop="originalScore" label="原成绩" width="100">
@@ -38,9 +38,8 @@
           </template>
         </el-table-column>
       </el-table>
-    </el-card>
+    </div>
 
-    <!-- 确认弹窗 -->
     <el-dialog v-model="dialogVisible" title="确认申请" width="400px">
       <p>确认申请课程 <strong>{{ currentItem?.courseName }}</strong> 的补考/重修？</p>
       <template #footer>
@@ -55,6 +54,7 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getMyRetakes, applyRetake } from '@/api/course'
+import { EditPen } from '@element-plus/icons-vue'
 
 const loading = ref(false)
 const retakes = ref([])
@@ -118,8 +118,11 @@ onMounted(() => loadData())
 </script>
 
 <style scoped>
-.retake-page { max-width: 900px; }
-.page-header { margin-bottom: 20px; }
-.page-header h2 { margin: 0; font-size: 20px; }
-.fail-score { color: #f56c6c; font-weight: bold; }
+.page{padding:20px 24px;max-width:900px;margin:0 auto;font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",system-ui,sans-serif}
+.page-head{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.page-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(91,155,213,.25)}
+.page-title{font-size:20px;font-weight:700;color:#1A1A2E;margin:0}
+.page-desc{font-size:13px;color:#9CA3AF;margin:2px 0 0}
+.card{background:#fff;border:1px solid #EEF0F4;border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.02)}
+.fail-score{color:#f56c6c;font-weight:bold}
 </style>

@@ -1,12 +1,14 @@
 <template>
-  <div class="applications-page">
-    <div class="page-header">
-      <h2>学生申请</h2>
+  <div class="page">
+    <div class="page-head">
+      <div class="page-icon" style="background:linear-gradient(135deg,#5B9BD5,#4A8AD4);"><el-icon :size="20" color="#fff"><Postcard /></el-icon></div>
+      <div><h2 class="page-title">校园服务申请</h2><p class="page-desc">奖学金/助学金/贷款/困难生申请管理</p></div>
+    </div>
+    <div class="toolbar">
       <el-button type="primary" @click="openCreateDialog">新建申请</el-button>
     </div>
-
-    <el-card shadow="never">
-      <el-tabs v-model="activeTab" @tab-change="loadData">
+    <div class="card" v-loading="loading">
+      <el-tabs v-model="activeTab" @tab-change="loadData" class="custom-tabs">
         <el-tab-pane label="奖学金" name="奖学金" />
         <el-tab-pane label="助学金" name="助学金" />
         <el-tab-pane label="贷款" name="贷款" />
@@ -33,9 +35,8 @@
           </template>
         </el-table-column>
       </el-table>
-    </el-card>
+    </div>
 
-    <!-- 新建申请弹窗 -->
     <el-dialog v-model="dialogVisible" title="新建申请" width="500px" :close-on-click-modal="false">
       <el-form :model="form" label-width="80px">
         <el-form-item label="申请类型">
@@ -72,6 +73,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { listMyApplications, submitApplication } from '@/api/student'
+import { Postcard } from '@element-plus/icons-vue'
 
 const activeTab = ref('奖学金')
 const applications = ref([])
@@ -140,7 +142,15 @@ onMounted(() => loadData())
 </script>
 
 <style scoped>
-.applications-page { max-width: 1000px; }
-.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.page-header h2 { margin: 0; font-size: 20px; }
+.page{padding:20px 24px;max-width:1200px;margin:0 auto;font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",system-ui,sans-serif}
+.page-head{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.page-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(91,155,213,.25)}
+.page-title{font-size:20px;font-weight:700;color:#1A1A2E;margin:0}
+.page-desc{font-size:13px;color:#9CA3AF;margin:2px 0 0}
+.toolbar{margin-bottom:16px;display:flex;justify-content:flex-end}
+.card{background:#fff;border:1px solid #EEF0F4;border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.02)}
+.custom-tabs :deep(.el-tabs__header){margin-bottom:16px}
+.custom-tabs :deep(.el-tabs__item){font-size:14px;font-weight:500;color:#6B7280}
+.custom-tabs :deep(.el-tabs__item.is-active){color:#5B9BD5;font-weight:600}
+.custom-tabs :deep(.el-tabs__active-bar){background:#5B9BD5}
 </style>

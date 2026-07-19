@@ -1,30 +1,36 @@
 <template>
-  <div class="page"><h3>📢 内容管理</h3>
-    <el-tabs v-model="tab">
-      <el-tab-pane label="公告管理" name="ann"/>
-      <el-tab-pane label="新闻管理" name="news"/>
-    </el-tabs>
+  <div class="page">
+    <div class="page-head">
+      <div class="page-icon" style="background:linear-gradient(135deg,#0EA5E9,#0284C7);"><el-icon :size="20" color="#fff"><Notification /></el-icon></div>
+      <div><h2 class="page-title">内容管理</h2><p class="page-desc">管理校园公告与新闻内容，支持发布、编辑与置顶</p></div>
+    </div>
+    <div class="toolbar">
+      <el-tabs v-model="tab">
+        <el-tab-pane label="公告管理" name="ann"/>
+        <el-tab-pane label="新闻管理" name="news"/>
+      </el-tabs>
+    </div>
 
     <!-- 公告 -->
-    <div v-if="tab==='ann'">
+    <div class="card" v-if="tab==='ann'" v-loading="aLoad">
       <el-button type="primary" size="small" @click="openAnn()" style="margin-bottom:12px">新增公告</el-button>
-      <el-table :data="alist" v-loading="aLoad" border size="small">
+      <el-table :data="alist" stripe border size="small">
         <el-table-column prop="title" label="标题" min-width="200"/>
         <el-table-column label="置顶" width="70"><template #default="{row}"><el-switch :model-value="row.isTop===1" @change="toggleTop(row)" size="small"/></template></el-table-column>
         <el-table-column label="状态" width="70"><template #default="{row}"><el-tag :type="row.status==='PUBLISHED'?'success':'info'" size="small">{{ row.status==='PUBLISHED'?'已发':'草稿' }}</el-tag></template></el-table-column>
-        <el-table-column label="操作" width="140"><template #default="{row}"><el-button size="small" @click="openAnn(row)">编辑</el-button><el-button size="small" type="danger" @click="delAnn(row.id)">删除</el-button></template></el-table-column>
+        <el-table-column label="操作" width="140"><template #default="{row}"><el-button size="small" type="primary" plain @click="openAnn(row)">编辑</el-button><el-button size="small" type="danger" plain @click="delAnn(row.id)">删除</el-button></template></el-table-column>
       </el-table>
     </div>
 
     <!-- 新闻 -->
-    <div v-if="tab==='news'">
+    <div class="card" v-if="tab==='news'" v-loading="nLoad">
       <el-button type="primary" size="small" @click="openNew()" style="margin-bottom:12px">新增新闻</el-button>
-      <el-table :data="nlist" v-loading="nLoad" border size="small">
+      <el-table :data="nlist" stripe border size="small">
         <el-table-column prop="title" label="标题" min-width="200"/>
         <el-table-column prop="category" label="分类" width="90"/>
         <el-table-column prop="viewCount" label="阅读" width="60"/>
         <el-table-column prop="publishTime" label="发布时间" width="150"/>
-        <el-table-column label="操作" width="140"><template #default="{row}"><el-button size="small" @click="openNew(row)">编辑</el-button><el-button size="small" type="danger" @click="delNew(row.id)">删除</el-button></template></el-table-column>
+        <el-table-column label="操作" width="140"><template #default="{row}"><el-button size="small" type="primary" plain @click="openNew(row)">编辑</el-button><el-button size="small" type="danger" plain @click="delNew(row.id)">删除</el-button></template></el-table-column>
       </el-table>
     </div>
 
@@ -62,6 +68,7 @@
 import { ref, onMounted, nextTick } from 'vue'
 import request from '@/utils/request'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { Notification } from '@element-plus/icons-vue'
 const tab=ref('ann'),cats=['学校要闻','就业创业','校园生活']
 // 公告
 const alist=ref([]),aLoad=ref(false),aDv=ref(false),aEdit=ref(false),aSav=ref(false),aEid=ref(null)
@@ -82,4 +89,12 @@ const delNew=async(id)=>{try{await ElMessageBox.confirm('确定删除？','提�
 
 onMounted(()=>{loadAnn();loadNews()})
 </script>
-<style scoped>.page{padding:20px}h3{margin-bottom:16px}</style>
+<style scoped>
+.page{padding:20px 24px;max-width:1200px;margin:0 auto;font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",system-ui,sans-serif}
+.page-head{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.page-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.page-title{font-size:20px;font-weight:700;margin:0;line-height:1.3;color:#1a1a2e}
+.page-desc{font-size:13px;color:#8c8c8c;margin:2px 0 0}
+.toolbar{margin-bottom:16px}
+.card{border:1px solid #EEF0F4;border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.02);background:#fff}
+</style>
