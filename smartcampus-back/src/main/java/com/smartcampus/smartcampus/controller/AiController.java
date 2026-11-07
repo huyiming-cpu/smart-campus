@@ -18,7 +18,7 @@ public class AiController {
     private final AiService aiService;
     private final JwtUtil jwtUtil;
 
-    /** AI智能对话 - 百度千帆大模型驱动 */
+    //1.AI智能对话
     @PostMapping("/ai/chat")
     public Result<String> chat(@RequestHeader("Authorization") String token,
                                 @RequestBody Map<String, String> body) {
@@ -29,7 +29,7 @@ public class AiController {
         return Result.success(reply);
     }
 
-    /** 获取对话历史 */
+    //2.获取对话历史
     @GetMapping("/ai/history")
     public Result<List<AiConversationHistory>> getChatHistory(
             @RequestHeader("Authorization") String token,
@@ -38,7 +38,7 @@ public class AiController {
                 jwtUtil.getUserIdFromToken(token), sessionId));
     }
 
-    /** 管理员管理知识库（补充FAQ） */
+    //3.管理员管理知识库
     @GetMapping("/admin/ai/knowledge")
     public Result<List<AiKnowledgeBase>> listKnowledgeBase() {
         return Result.success(aiService.listKnowledgeBase());

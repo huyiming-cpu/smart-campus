@@ -24,7 +24,7 @@ public class StudentController {
         return "校办".equals(d) ? null : d;
     }
 
-    // ==================== 学生申请 S-14 ====================
+    // 学生申请
     @GetMapping("/student/applications")
     public Result<List<Map<String, Object>>> listMyApplications(
             @RequestHeader("Authorization") String token,
@@ -45,7 +45,7 @@ public class StudentController {
         return Result.success(studentService.submitApplication(app));
     }
 
-    /** T-12: 辅导员审核（只看本院学生） */
+    //辅导员审核
     @GetMapping("/teacher/applications/pending")
     public Result<List<Map<String, Object>>> listPendingApplications(@RequestHeader("Authorization") String token) {
         return Result.success(studentService.listPendingApplications(dept(token)));
@@ -56,19 +56,19 @@ public class StudentController {
         return Result.success(studentService.listReviewedApplications(dept(token)));
     }
 
-    /** 院长查看待二审的申请 */
+    // 院长查看待二审
     @GetMapping("/leader/applications/pending")
     public Result<List<Map<String, Object>>> listFirstApprovedApplications(@RequestHeader("Authorization") String token) {
         return Result.success(studentService.listFirstApprovedApplications(dept(token)));
     }
 
-    /** 院长查看已审批的申请 */
+    //院长查看已审批
     @GetMapping("/leader/applications/reviewed")
     public Result<List<Map<String, Object>>> listFinalReviewedApplications(@RequestHeader("Authorization") String token) {
         return Result.success(studentService.listFinalReviewedApplications(dept(token)));
     }
 
-    /** 院长最终审批 */
+    //院长最终审批
     @PutMapping("/leader/applications/{id}/final-approve")
     public Result<Map<String, Object>> finalApprove(@PathVariable Long id, @RequestBody Map<String, String> body) {
         return Result.success(studentService.finalApprove(id,
@@ -85,7 +85,7 @@ public class StudentController {
         return Result.success("审核完成");
     }
 
-    // ==================== 竞赛报名 S-14 ====================
+    // 竞赛报名
     @GetMapping("/student/competitions")
     public Result<List<CompetitionRegistration>> listMyCompetitions(@RequestHeader("Authorization") String token) {
         return Result.success(studentService.listMyCompetitions(jwtUtil.getUserIdFromToken(token)));
@@ -96,7 +96,7 @@ public class StudentController {
         return Result.success(studentService.registerCompetition(c));
     }
 
-    // ==================== 心理咨询 S-14 ====================
+    //心理咨询
     @GetMapping("/student/consultations")
     public Result<List<ConsultationAppointment>> listMyConsultations(@RequestHeader("Authorization") String token) {
         return Result.success(studentService.listMyConsultations(jwtUtil.getUserIdFromToken(token)));
@@ -107,7 +107,7 @@ public class StudentController {
         return Result.success(studentService.bookConsultation(c));
     }
 
-    // ==================== 实践项目 S-14 ====================
+    // 实践项目
     @GetMapping("/student/practices")
     public Result<List<PracticeProjectRegistration>> listMyPractices(@RequestHeader("Authorization") String token) {
         return Result.success(studentService.listMyPractices(jwtUtil.getUserIdFromToken(token)));

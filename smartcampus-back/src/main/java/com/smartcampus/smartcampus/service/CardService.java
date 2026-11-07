@@ -20,7 +20,7 @@ public class CardService {
     private final CardTransactionRepository transactionRepository;
     private final PaymentRecordRepository paymentRecordRepository;
 
-    // ==================== 学生充值 ====================
+    // 学生充值
     @Transactional
     public Card recharge(Long userId, BigDecimal amount) {
         Card card = cardRepository.findByUserId(userId)
@@ -39,7 +39,7 @@ public class CardService {
         return card;
     }
 
-    // ==================== S-12 学生一卡通信息 ====================
+    // 学生一卡通信息
 
     public Response.CardInfo getMyCard(Long userId) {
         Card card = cardRepository.findByUserId(userId).orElse(null);
@@ -63,13 +63,13 @@ public class CardService {
         return info;
     }
 
-    // ==================== S-13 学费缴费查询 ====================
+    // 学费缴费查询
 
     public List<PaymentRecord> getMyPayments(Long userId) {
         return paymentRecordRepository.findByStudentIdOrderBySemesterDesc(userId);
     }
 
-    // ==================== A-13 一卡通管理（管理员） ====================
+    // 一卡通管理
 
     public List<Card> listAllCards() {
         return cardRepository.findAll();
@@ -102,13 +102,13 @@ public class CardService {
         return transactionRepository.save(tx);
     }
 
-    /** 模拟同步一卡通消费数据 */
+    // 模拟同步一卡通消费数据
     @Transactional
     public String syncCardData() {
         return "同步完成，共处理 12 条一卡通消费记录";
     }
 
-    // ==================== A-14 缴费管理（管理员） ====================
+    //  缴费管理
 
     public List<PaymentRecord> listAllPayments(String semester, String status) {
         if (semester != null) return paymentRecordRepository.findBySemesterOrderByPaymentStatusAsc(semester);

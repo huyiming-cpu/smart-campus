@@ -24,7 +24,7 @@ public class TeacherController {
         return "校办".equals(d) ? null : d;
     }
 
-    // ==================== 科研 T-07 ====================
+    // 科研
     @GetMapping("/teacher/research")
     public Result<List<ScientificResearch>> listMyResearch(@RequestHeader("Authorization") String token) {
         return Result.success(teacherService.listMyResearch(jwtUtil.getUserIdFromToken(token)));
@@ -47,14 +47,14 @@ public class TeacherController {
         teacherService.deleteResearch(id); return Result.success();
     }
 
-    /** L-06 科研总览（院长看本院，校长看全校） */
+    //科研总览
     @GetMapping("/leader/research")
     public Result<List<Map<String, Object>>> listAllResearch(@RequestHeader("Authorization") String token,
                                                               @RequestParam(required = false) String status) {
         return Result.success(teacherService.listAllResearch(dept(token), status));
     }
 
-    // ==================== 毕业设计 T-08 ====================
+    //毕业设计
     @GetMapping("/teacher/graduation-design")
     public Result<List<Map<String, Object>>> listMyDesigns(@RequestHeader("Authorization") String token) {
         return Result.success(teacherService.listMyDesigns(jwtUtil.getUserIdFromToken(token)));
@@ -70,20 +70,20 @@ public class TeacherController {
         return Result.success(teacherService.updateDesign(id, d));
     }
 
-    /** 教师审批毕业设计 */
+    //教师审批毕业设计
     @PutMapping("/teacher/graduation-design/{id}/approve")
     public Result<Map<String, Object>> approveDesign(@PathVariable Long id, @RequestBody Map<String, String> body) {
         return Result.success(teacherService.approveDesign(id, body.get("status"), body.get("comment")));
     }
 
-    /** 学生提交/修改毕业设计选题 */
+    //学生提交/修改毕业设计选题
     @PostMapping("/student/graduation-design")
     public Result<Map<String, Object>> submitDesign(@RequestHeader("Authorization") String token,
                                                      @RequestBody Map<String, Object> body) {
         return Result.success(teacherService.submitDesign(jwtUtil.getUserIdFromToken(token), body));
     }
 
-    /** 获取本院教师列表（学生选毕设老师用） */
+    //获取本院教师列表
     @GetMapping("/student/teachers")
     public Result<List<Map<String, Object>>> getDepartmentTeachers(@RequestHeader("Authorization") String token) {
         Long userId = jwtUtil.getUserIdFromToken(token);

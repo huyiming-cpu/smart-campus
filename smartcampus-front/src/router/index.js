@@ -8,6 +8,7 @@ const ComingSoon = () => import('../views/common/ComingSoon.vue')
 const AiChat = () => import('../views/common/AiChat.vue')
 const NoticeList = () => import('../views/common/NoticeList.vue')
 const NewsList = () => import('../views/common/NewsList.vue')
+const SchoolCalendar = () => import('../views/common/SchoolCalendar.vue')
 const StudentNotice = () => import('../views/student/StudentNotice.vue')
 const StudentStudy = () => import('../views/student/StudentStudy.vue')
 const StudentExamCenter = () => import('../views/student/StudentExamCenter.vue')
@@ -101,6 +102,7 @@ const routes = [
       { path: 'labs', component: StudentLabs },
       { path: 'graduation', component: StudentGraduation },
       { path: 'quick', component: StudentApplications },
+      { path: 'calendar', component: SchoolCalendar },
     ] },
 
   // ==================== 教师端 ====================
@@ -124,6 +126,7 @@ const routes = [
       { path: 'students', component: TeacherClassRoster },
       { path: 'awards', component: TeacherApplications },
       { path: 'quick', component: TeacherQuick },
+      { path: 'calendar', component: SchoolCalendar },
     ] },
 
   // ==================== 领导端 ====================

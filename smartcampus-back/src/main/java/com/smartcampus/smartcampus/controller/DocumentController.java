@@ -21,13 +21,13 @@ public class DocumentController {
     private final JwtUtil jwtUtil;
     private final UserProfileRepository userProfileRepo;
 
-    /** 领导部门（校办=全校，其他=本院） */
+    //1.领导部门
     private String dept(String token) {
         String d = userProfileRepo.findById(jwtUtil.getUserIdFromToken(token)).map(UserProfile::getDepartment).orElse("校办");
         return "校办".equals(d) ? null : d;
     }
 
-    // ==================== 教师 T-10 ====================
+    // 2.教师
     @GetMapping("/teacher/documents/my")
     public Result<List<Document>> listMyDocuments(@RequestHeader("Authorization") String token) {
         return Result.success(documentService.listMyDocuments(jwtUtil.getUserIdFromToken(token)));
@@ -42,7 +42,7 @@ public class DocumentController {
         documentService.deleteDocument(id, jwtUtil.getUserIdFromToken(token)); return Result.success();
     }
 
-    // ==================== 领导 L-05 公文审批 ====================
+    // 3.领导公文审批
     @GetMapping("/leader/documents/pending")
     public Result<List<Map<String, Object>>> listPendingDocuments(@RequestHeader("Authorization") String token) {
         return Result.success(documentService.listLeaderDocuments("pending", dept(token)));
@@ -56,10 +56,10 @@ public class DocumentController {
         return Result.success(documentService.approveDocument(id, jwtUtil.getUserIdFromToken(token), body.get("approverName"), body.getOrDefault("status","APPROVED"), body.getOrDefault("comment","")));
     }
 
-    // ==================== 工作计划 L-04 ====================
+    // 4.工作计划
     @GetMapping("/leader/work-plans")
     public Result<List<Map<String, Object>>> listWorkPlans(@RequestHeader("Authorization") String token) {
-        // 所有领导只看自己的工作计划
+        // 看自己的工作计划
         return Result.success(documentService.listWorkPlans(jwtUtil.getUserIdFromToken(token), null));
     }
     @PostMapping("/leader/work-plans") public Result<WorkPlan> createWorkPlan(@RequestHeader("Authorization") String token, @RequestBody WorkPlan p) {
@@ -75,7 +75,7 @@ public class DocumentController {
     @PutMapping("/leader/work-plans/{id}") public Result<WorkPlan> updateWorkPlan(@PathVariable Long id, @RequestBody WorkPlan p) { return Result.success(documentService.updateWorkPlan(id,p)); }
     @DeleteMapping("/leader/work-plans/{id}") public Result<Void> deleteWorkPlan(@PathVariable Long id) { documentService.deleteWorkPlan(id); return Result.success(); }
 
-    // ==================== 教师工作计划 T-11 ====================
+    // 教师工作计划
     @GetMapping("/teacher/work-plans")
     public Result<List<WorkPlan>> listMyWorkPlans(@RequestHeader("Authorization") String token) {
         return Result.success(documentService.listMyWorkPlans(jwtUtil.getUserIdFromToken(token)));

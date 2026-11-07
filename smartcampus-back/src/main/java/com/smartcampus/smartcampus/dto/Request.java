@@ -3,19 +3,17 @@ package com.smartcampus.smartcampus.dto;
 import lombok.Data;
 import java.time.LocalDateTime;
 
-/**
- * 所有请求DTO统一放在这里
- */
+
 public class Request {
 
-    // ========== 1. 登录 ==========
+    //  1. 登录
     @Data
     public static class Login {
         private String identityNumber;
         private String password;
     }
 
-    // ========== 2. 注册 ==========
+    // 2. 注册
     @Data
     public static class Register {
         private String identityNumber;
@@ -26,14 +24,14 @@ public class Request {
         private String email;
     }
 
-    // ========== 3. 修改密码 ==========
+    //  3. 修改密码
     @Data
     public static class UpdatePassword {
         private String oldPassword;
         private String newPassword;
     }
 
-    // ========== 4. 更新个人信息（只含可改字段） ==========
+    // 4. 更新个人信
     @Data
     public static class UpdateProfile {
         private String phone;
@@ -50,7 +48,7 @@ public class Request {
         private String graduationDate;
     }
 
-    // ========== 5. 公告表单（管理员用） ==========
+    // 5. 公告表单
     @Data
     public static class AnnouncementForm {
         private String title;
@@ -65,7 +63,7 @@ public class Request {
         private String status;
     }
 
-    // ========== 6. 新闻表单（管理员用） ==========
+    // 6. 新闻表单
     @Data
     public static class NewsForm {
         private String title;
@@ -80,7 +78,7 @@ public class Request {
         private LocalDateTime publishTime;
     }
 
-    // ========== 7. 公文提交表单 ==========
+    // 7. 公文提交表单
     @Data
     public static class DocumentForm {
         private String title;
@@ -91,5 +89,5 @@ public class Request {
         private String department;
     }
 
-    // ========== 以后新增的接口都加在这里 ==========
+
 }

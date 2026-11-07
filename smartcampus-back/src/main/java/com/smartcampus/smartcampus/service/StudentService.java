@@ -25,7 +25,7 @@ public class StudentService {
     private final UserRepository userRepo;
     private final UserProfileRepository userProfileRepo;
 
-    // ==================== 学生申请 S-14 (奖学金/助学金/贷款/困难生) ====================
+    // 学生申请
 
     @Transactional
     public StudentApplication submitApplication(StudentApplication app) {
@@ -34,7 +34,7 @@ public class StudentService {
         return appRepo.save(app);
     }
 
-    /** T-12: 教师/辅导员 审核学生申请 */
+
     @Transactional
     public StudentApplication reviewApplication(Long id, String status, String comment, Long reviewerId) {
         StudentApplication app = appRepo.findById(id).orElseThrow(() -> new RuntimeException("申请不存在"));
@@ -45,7 +45,7 @@ public class StudentService {
         return appRepo.save(app);
     }
 
-    /** 辅导员：待审核 + 已审核（只看本院学生） */
+
     public List<Map<String, Object>> listPendingApplications(String department) {
         List<StudentApplication> raw = appRepo.findByStatusOrderBySubmitTimeDesc("PENDING");
         if (department != null) raw = filterByDept(raw, department);
@@ -61,14 +61,14 @@ public class StudentService {
         return enrichApplications(list);
     }
 
-    /** 院长二审：查看辅导员已通过的申请（按部门过滤） */
+    //院长二审
     public List<Map<String, Object>> listFirstApprovedApplications(String department) {
         List<StudentApplication> raw = appRepo.findByStatusOrderBySubmitTimeDesc("FIRST_APPROVED");
         if (department != null) raw = filterByDept(raw, department);
         return enrichApplications(raw);
     }
 
-    /** 院长：已审批的申请（按部门过滤） */
+    //院长：已审批的申请
     public List<Map<String, Object>> listFinalReviewedApplications(String department) {
         List<StudentApplication> list = new ArrayList<>();
         list.addAll(appRepo.findByStatusOrderBySubmitTimeDesc("APPROVED"));
@@ -83,7 +83,7 @@ public class StudentService {
         }).collect(java.util.stream.Collectors.toList());
     }
 
-    /** 院长最终审批 */
+    //院长最终审批
     @Transactional
     public Map<String, Object> finalApprove(Long id, String status, String comment, Long reviewerId) {
         StudentApplication app = appRepo.findById(id).orElseThrow();
@@ -128,7 +128,7 @@ public class StudentService {
         return result;
     }
 
-    // ==================== 竞赛报名 S-14 ====================
+
     public List<CompetitionRegistration> listMyCompetitions(Long studentId) {
         return compRepo.findByStudentIdOrderByRegistrationTimeDesc(studentId);
     }
@@ -147,7 +147,7 @@ public class StudentService {
         return compRepo.save(c);
     }
 
-    // ==================== 心理咨询预约 S-14 ====================
+
     public List<ConsultationAppointment> listMyConsultations(Long studentId) {
         return consultRepo.findByStudentIdOrderByAppointmentDateDesc(studentId);
     }
@@ -166,7 +166,7 @@ public class StudentService {
         return consultRepo.save(c);
     }
 
-    // ==================== 实践项目预约 S-14 ====================
+    // 实践项目预约
     public List<PracticeProjectRegistration> listMyPractices(Long studentId) {
         return practiceRepo.findByStudentIdOrderByRegistrationTimeDesc(studentId);
     }

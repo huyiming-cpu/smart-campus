@@ -39,17 +39,24 @@
             <div class="hero-content">
               <h1 class="hero-title">{{ userStore.userInfo?.name || '同学' }}，{{ greeting }}</h1>
               <p class="hero-subtitle">智慧校园，让学习生活更便捷、更精彩</p>
-              <div class="hero-search">
+              <div class="hero-search" style="position:relative">
                 <el-icon class="search-icon"><Search /></el-icon>
-                <input v-model="searchKeyword" type="text" placeholder="搜索课程、通知、成绩..." class="search-input" @keyup.enter="onSearch" />
+                <input v-model="searchKeyword" type="text" placeholder="搜索课程、通知、成绩..." class="search-input" @keyup.enter="onSearch" @focus="showSuggestions = true" />
                 <button class="search-btn" @click="onSearch">搜索</button>
+                <SearchSuggestions
+                  :keyword="searchKeyword"
+                  role="STUDENT"
+                  :visible="showSuggestions && searchKeyword.length >= 2"
+                  @navigate="handleSuggestionNavigate"
+                  @close="showSuggestions = false"
+                />
               </div>
               <div class="hero-tags">
                 <span class="hero-tag" @click="router.push('/student/study')">📖 课程学习</span>
                 <span class="hero-tag" @click="router.push('/student/scores')">📝 成绩查询</span>
                 <span class="hero-tag" @click="router.push('/student/wallet')">💳 一卡通</span>
                 <span class="hero-tag" @click="router.push('/student/exams')">📋 考试中心</span>
-                <span class="hero-tag" @click="router.push('/student/schedule')">📅 校历查询</span>
+                <span class="hero-tag" @click="router.push('/student/calendar')">📅 校历查询</span>
               </div>
               <div class="hero-date-row">
                 <el-icon :size="16" color="#6B7280"><Calendar /></el-icon>
@@ -202,10 +209,13 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
 import request from '@/utils/request'
+import SearchSuggestions from '@/components/SearchSuggestions.vue'
 import { Search, Calendar, ArrowRight, ArrowLeft, Notebook, School, Timer, Wallet, Document, Tickets, Reading, Phone } from '@element-plus/icons-vue'
 
 const route = useRoute(); const router = useRouter(); const userStore = useUserStore()
 const searchKeyword = ref('')
+const showSuggestions = ref(false)
+const selectedUrl = ref('')
 
 const today = computed(() => {
   const d = new Date()
@@ -251,9 +261,22 @@ const quickServices = [
   { label: '个人信息', path: '/student/profile', icon: Phone, color: '#8B5CF6', bg: '#F3F0FF' },
 ]
 
+const handleSuggestionNavigate = (url, title) => {
+  searchKeyword.value = title
+  selectedUrl.value = url
+  showSuggestions.value = false
+  router.push(url)
+}
+
 const onSearch = () => {
   if (searchKeyword.value.trim()) {
-    router.push(`/student/notice?keyword=${encodeURIComponent(searchKeyword.value)}`)
+    if (selectedUrl.value) {
+      router.push(selectedUrl.value)
+      selectedUrl.value = ''
+    } else {
+      router.push(`/student/notice?keyword=${encodeURIComponent(searchKeyword.value)}`)
+    }
+    showSuggestions.value = false
   }
 }
 

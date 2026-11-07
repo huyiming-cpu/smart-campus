@@ -34,7 +34,7 @@ public class SystemController {
         return Result.success(courseSelectConfig.isOpen());
     }
 
-    /** 领导部门（校办=全校，其他=本院） */
+    //领导部门
     private String dept(String token) {
         String d = systemService.getDepartment(jwtUtil.getUserIdFromToken(token));
         return "校办".equals(d) ? null : d;
@@ -57,14 +57,14 @@ public class SystemController {
     @PostMapping("/admin/labs") public Result<Lab> saveLab(@RequestBody Lab l) { return Result.success(systemService.saveLab(l)); }
     @DeleteMapping("/admin/labs/{id}") public Result<Void> deleteLab(@PathVariable Long id) { systemService.deleteLab(id); return Result.success(); }
 
-    // ==================== 领导端 ====================
+
 
     @GetMapping("/leader/directory")
     public Result<List<Map<String, Object>>> getDirectory(@RequestHeader("Authorization") String token, @RequestParam(required=false) String department) {
         return Result.success(systemService.getDirectory(department));
     }
 
-    /** T-14 教师通讯录 */
+    //教师通讯录
     @GetMapping("/teacher/directory")
     public Result<List<Map<String, Object>>> getTeacherDirectory(@RequestParam(required=false) String department) {
         return Result.success(systemService.getDirectory(department));
@@ -90,7 +90,7 @@ public class SystemController {
         return Result.success(systemService.studentCountStats(dept(token)));
     }
 
-    // ==================== 工具API ====================
+
     @GetMapping("/admin/classrooms")
     public Result<List<Classroom>> listClassrooms() { return Result.success(classroomRepo.findByStatus("AVAILABLE")); }
 
@@ -99,7 +99,7 @@ public class SystemController {
         return Result.success(identityRegistryRepo.findDistinctClassNames());
     }
 
-    /** 学生查看实验室 */
+    //学生查看实验室
     @GetMapping("/student/labs")
     public Result<List<Lab>> listStudentLabs(@RequestParam(required=false) String department) {
         return Result.success(systemService.listLabs(department, "OPEN"));

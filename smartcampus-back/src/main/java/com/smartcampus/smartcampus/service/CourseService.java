@@ -26,7 +26,7 @@ public class CourseService {
     private final UserRepository userRepo;
     private final UserProfileRepository userProfileRepo;
 
-    // ==================== S-05 学生课表 ====================
+    // 学生课表
     public List<CourseSchedule> getStudentSchedule(Long studentId, String semester) {
         if (semester == null) semester = "2025-2026-2";
         List<StudentCourse> enrolled = studentCourseRepo.findByStudentIdAndSemester(studentId, semester)
@@ -48,7 +48,7 @@ public class CourseService {
         }
     }
 
-    // ==================== S-06 课程情况总览 ====================
+    // 课程情况总览
     public Map<String, Object> getCourseOverview(Long studentId) {
         List<StudentCourse> all = studentCourseRepo.findAllByStudentId(studentId)
                 .stream().filter(sc -> !"DROPPED".equals(sc.getStatus())).collect(Collectors.toList());
@@ -64,7 +64,7 @@ public class CourseService {
         return overview;
     }
 
-    // ==================== S-07 成绩查询（带课程名） ====================
+    // 成绩查询
     public List<Map<String, Object>> getMyScores(Long studentId, String semester) {
         List<StudentCourse> list;
         if (semester != null && !semester.isEmpty()) list = studentCourseRepo.findByStudentIdAndSemester(studentId, semester);
@@ -94,7 +94,7 @@ public class CourseService {
         return result;
     }
 
-    // ==================== S-10 补考/重修报名 ====================
+    // 补考/重修报名
     public List<Map<String, Object>> getMyRetakes(Long studentId) {
         List<StudentRetake> list = retakeRepo.findByStudentIdOrderByApplicationTimeDesc(studentId);
         List<Map<String, Object>> result = new ArrayList<>();
@@ -137,7 +137,7 @@ public class CourseService {
         return retakeRepo.save(r);
     }
 
-    // ==================== T-04 教师任课信息 ====================
+    // 教师任课信息
     public List<CourseSchedule> getTeacherSchedule(Long teacherId, String semester) {
         if (semester == null) semester = "2025-2026-2";
         List<CourseSchedule> schedules = scheduleRepo.findByTeacherIdAndSemester(teacherId, semester);
@@ -145,7 +145,7 @@ public class CourseService {
         return schedules;
     }
 
-    /** T-11 班级名单（带学生姓名/学号/班级） */
+    //班级名单
     public List<Map<String, Object>> getClassRoster(Long scheduleId) {
         List<StudentCourse> enrolled = studentCourseRepo.findByScheduleId(scheduleId);
         List<Map<String, Object>> roster = new ArrayList<>();
@@ -173,7 +173,7 @@ public class CourseService {
         return roster;
     }
 
-    // ==================== T-05 成绩录入 ====================
+    // 成绩录入
     @Transactional
     public StudentCourse enterScore(Long studentCourseId, BigDecimal score,
                                      String gradeLevel, String examType, Long operatorId, String operatorName) {
@@ -192,7 +192,7 @@ public class CourseService {
         return studentCourseRepo.save(sc);
     }
 
-    // ==================== A-09 课程管理（管理员） ====================
+    // 课程管理
     public List<Course> listAllCourses(String department, String courseType) {
         if (department != null) return courseRepo.findByDepartment(department);
         if (courseType != null) return courseRepo.findByCourseType(courseType);
@@ -214,7 +214,7 @@ public class CourseService {
     @Transactional
     public void deleteCourse(Long id) { courseRepo.deleteById(id); }
 
-    // ==================== A-10 教师任课分配 ====================
+    // 教师任课分配
     public List<CourseSchedule> listAllSchedules(String semester) {
         List<CourseSchedule> list;
         if (semester != null) list = scheduleRepo.findBySemesterOrderByWeekdayAsc(semester);
@@ -229,7 +229,7 @@ public class CourseService {
     @Transactional
     public void deleteSchedule(Long id) { scheduleRepo.deleteById(id); }
 
-    // ==================== A-11 学生选课管理 ====================
+    // 学生选课管理
     public List<StudentCourse> listStudentCourses(Long studentId, String semester) {
         if (studentId != null) return studentCourseRepo.findByStudentIdAndSemester(studentId, semester);
         return studentCourseRepo.findAll();
@@ -262,7 +262,7 @@ public class CourseService {
         studentCourseRepo.deleteById(id);
     }
 
-    /** T-13 教师查看所授课程选课情况 */
+    //教师查看所授课程选课情况
     public List<Map<String, Object>> getTeacherEnrollment(Long teacherId, String semester) {
         List<CourseSchedule> schedules = scheduleRepo.findByTeacherIdAndSemester(teacherId, semester);
         List<Map<String, Object>> result = new ArrayList<>();

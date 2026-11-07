@@ -21,15 +21,15 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final NewsRepository newsRepository;
 
-    // ==================== 公告 ====================
+    // 公告
 
-    /** 按角色查已发布公告（学生/教师/领导都能看） */
+
     public List<Response.AnnouncementItem> listAnnouncements(String roleCode) {
         return noticeRepository.findPublishedByRole(roleCode).stream()
                 .map(this::toAnnounceItem).collect(Collectors.toList());
     }
 
-    /** 公告详情 */
+
     public Response.AnnouncementDetail getAnnouncement(Long id) {
         Announcement a = noticeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("公告不存在"));
@@ -38,7 +38,7 @@ public class NoticeService {
         return toAnnounceDetail(a);
     }
 
-    /** 管理员查所有公告(含草稿/已撤回) */
+    //管理员查所有公告
     public List<Response.AnnouncementItem> listAllAnnouncements(String keyword) {
         List<Announcement> list;
         if (keyword != null && !keyword.isEmpty()) {
@@ -97,9 +97,9 @@ public class NoticeService {
         a.setStatus(form.getStatus() != null ? form.getStatus() : "PUBLISHED");
     }
 
-    // ==================== 新闻 ====================
+    // 新闻
 
-    /** 查已发布新闻（支持分类筛选） */
+
     public List<Response.NewsItem> listNews(String category) {
         List<News> list;
         if (category != null && !category.isEmpty()) {
@@ -110,7 +110,7 @@ public class NoticeService {
         return list.stream().map(this::toNewsItem).collect(Collectors.toList());
     }
 
-    /** 新闻详情 */
+    // 新闻详情
     public Response.NewsDetail getNews(Long id) {
         News n = newsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("新闻不存在"));
@@ -154,7 +154,7 @@ public class NoticeService {
         n.setPublishTime(form.getPublishTime() != null ? form.getPublishTime() : LocalDateTime.now());
     }
 
-    // ==================== DTO 转换 ====================
+
 
     private Response.AnnouncementItem toAnnounceItem(Announcement a) {
         Response.AnnouncementItem item = new Response.AnnouncementItem();

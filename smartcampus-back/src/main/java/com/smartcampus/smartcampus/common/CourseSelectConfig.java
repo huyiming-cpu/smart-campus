@@ -4,9 +4,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * 选课开关 - 全局共享，控制学生选课功能是否开放
- */
+
 @Component
 public class CourseSelectConfig {
 

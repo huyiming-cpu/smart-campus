@@ -33,9 +33,7 @@ public class AiService {
 
         当前用户提问：""";
 
-    /**
-     * AI对话 - 调用 DeepSeek 大模型 (OpenAI兼容格式)
-     */
+
     public String chat(String question, Long userId, String sessionId) {
         String aiReply;
         try {
@@ -91,14 +89,14 @@ public class AiService {
         return aiReply;
     }
 
-    /** 获取对话历史 */
+    //获取对话历史
     public List<AiConversationHistory> getChatHistory(Long userId, String sessionId) {
         List<AiConversationHistory> list = historyRepo.findByUserIdOrderByCreatedTimeDesc(userId);
         java.util.Collections.reverse(list);
         return list;
     }
 
-    /** 管理员管理知识库（保留，可用于手动补充FAQ） */
+    //管理员管理知识库（
     public List<AiKnowledgeBase> listKnowledgeBase() {
         return kbRepo.findAll();
     }

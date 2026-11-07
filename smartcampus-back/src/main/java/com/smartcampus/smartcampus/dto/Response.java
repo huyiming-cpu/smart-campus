@@ -5,12 +5,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * 所有响应DTO统一放在这里
- */
+
 public class Response {
 
-    // ========== 1. 登录响应 ==========
+    // 1. 登录响应
     @Data
     public static class Login {
         private String token;
@@ -21,7 +19,7 @@ public class Response {
         private String roleName;
     }
 
-    // ========== 2. 个人信息响应（user + user_profile 全部字段） ==========
+    // 2. 个人信息响应（
     @Data
     public static class UserProfile {
         private Long id;
@@ -44,7 +42,7 @@ public class Response {
         private LocalDateTime graduationDate;
     }
 
-    // ========== 3. 公告列表项 ==========
+    // 3. 公告列表项
     @Data
     public static class AnnouncementItem {
         private Long id;
@@ -59,7 +57,7 @@ public class Response {
         private LocalDateTime createdTime;
     }
 
-    // ========== 4. 公告详情 ==========
+    // 4. 公告详情
     @Data
     public static class AnnouncementDetail {
         private Long id;
@@ -76,7 +74,7 @@ public class Response {
         private LocalDateTime createdTime;
     }
 
-    // ========== 5. 新闻列表项 ==========
+    //  5. 新闻列表项
     @Data
     public static class NewsItem {
         private Long id;
@@ -90,7 +88,7 @@ public class Response {
         private LocalDateTime publishTime;
     }
 
-    // ========== 6. 新闻详情 ==========
+    //  6. 新闻详情
     @Data
     public static class NewsDetail {
         private Long id;
@@ -106,7 +104,7 @@ public class Response {
         private LocalDateTime publishTime;
     }
 
-    // ========== 7. 仪表盘 ==========
+    // 7. 仪表盘
     @Data
     public static class Dashboard {
         private int todayActiveUsers;
@@ -116,7 +114,7 @@ public class Response {
         private String uptime;
     }
 
-    // ========== 8. 统计卡片 ==========
+    // 8. 统计卡片
     @Data
     public static class StatCard {
         private String label;
@@ -124,14 +122,14 @@ public class Response {
         private String extra;
     }
 
-    // ========== 9. 键值对 ==========
+    // 9. 键值对
     @Data
     public static class KV {
         private String key;
         private String value;
     }
 
-    // ========== 资产统计 ==========
+    // 资产统计
     @Data
     public static class AssetStats {
         private int totalCount;
@@ -157,7 +155,7 @@ public class Response {
         private String remark;
     }
 
-    // ========== 在校生统计 ==========
+    // 在校生统计
     @Data
     public static class StudentCountItem {
         private String department;
@@ -181,7 +179,7 @@ public class Response {
         private String major;
     }
 
-    // ========== 评教统计 ==========
+    // 评教统计
     @Data
     public static class EvalStat {
         private String teacherName;
@@ -189,7 +187,7 @@ public class Response {
         private double avgScore;
     }
 
-    // ========== 10. 缴费统计 ==========
+    // 10. 缴费统计
     @Data
     public static class PaymentStats {
         private int totalStudents;
@@ -200,7 +198,7 @@ public class Response {
         private BigDecimal paidAmount;
     }
 
-    // ========== 11. 一卡通信息 ==========
+    // 11. 一卡通信息
     @Data
     public static class CardInfo {
         private String cardNo;
@@ -209,7 +207,7 @@ public class Response {
         private List<TxItem> transactions;
     }
 
-    // ========== 12. 消费记录项 ==========
+    // 12. 消费记录项
     @Data
     public static class TxItem {
         private String transactionType;
@@ -217,5 +215,15 @@ public class Response {
         private BigDecimal balance;
         private String merchant;
         private java.time.LocalDateTime transactionTime;
+    }
+
+    //  13. 搜索建议
+    @Data
+    public static class SearchSuggestion {
+        private String type;        // FUNCTION 或 CONTENT
+        private String title;       // 显示标题
+        private String description; // 副标题/描述
+        private String url;         // 前端路由路径
+        private String icon;        // 图标名
     }
 }

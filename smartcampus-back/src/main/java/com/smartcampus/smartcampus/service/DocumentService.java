@@ -22,7 +22,7 @@ public class DocumentService {
     private final DocumentRepository documentRepository;
     private final WorkPlanRepository workPlanRepository;
 
-    // ==================== 公文 Document (T-10 / L-05) ====================
+    // 公文
 
     /** 教师：查看自己提交的公文 */
     public List<Document> listMyDocuments(Long userId) {
@@ -68,7 +68,7 @@ public class DocumentService {
         return documentRepository.save(d);
     }
 
-    /** 教师：删除自己的公文(仅PENDING状态可删) */
+    //教师：删除自己的公文
     @Transactional
     public void deleteDocument(Long id, Long userId) {
         Document d = documentRepository.findById(id)
@@ -80,7 +80,7 @@ public class DocumentService {
         documentRepository.deleteById(id);
     }
 
-    // ==================== 工作计划 WorkPlan (L-04) ====================
+    // 工作计划
 
     private final UserRepository userRepo;
     private final UserProfileRepository profileRepo;
@@ -108,7 +108,7 @@ public class DocumentService {
         }).collect(java.util.stream.Collectors.toList());
     }
 
-    /** 公文列表（按部门过滤，dept=null查全部） */
+    //公文列表
     public List<Map<String, Object>> listLeaderDocuments(String type, String department) {
         List<Document> list;
         if ("approved".equals(type)) {

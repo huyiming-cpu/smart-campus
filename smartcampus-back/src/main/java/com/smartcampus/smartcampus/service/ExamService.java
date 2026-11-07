@@ -23,7 +23,7 @@ public class ExamService {
     private final UserProfileRepository userProfileRepo;
     private final CourseRepository courseRepo;
 
-    // ==================== S-08 考试安排查询 ====================
+    // 考试安排查询
     public List<ExamArrangement> getExamArrangements(String semester) {
         if (semester == null) semester = "2025-2026-2";
         return examRepo.findBySemesterOrderByExamDateAsc(semester);
@@ -38,8 +38,8 @@ public class ExamService {
     private final CourseScheduleRepository scheduleRepo;
     private final StudentCourseRepository studentCourseRepo;
 
-    // ==================== S-09 网上评教 ====================
-    /** 返回学生本学期所有待评教课程（含已评教记录） */
+    // 网上评教
+
     public List<Map<String, Object>> getMyEvaluations(Long studentId, String semester) {
         if (semester == null) semester = "2025-2026-2";
         List<StudentCourse> enrolled = studentCourseRepo.findByStudentIdAndSemester(studentId, semester);
@@ -163,7 +163,7 @@ public class ExamService {
         return result;
     }
 
-    // ==================== S-11 等级考试报名 ====================
+    // 等级考试报名
     public List<LevelExam> listLevelExams(String status) {
         if (status != null) return levelExamRepo.findByStatus(status);
         return levelExamRepo.findAll();
@@ -199,7 +199,7 @@ public class ExamService {
         return result;
     }
 
-    // ==================== A-12 管理员考试管理 ====================
+    // 管理员考试管理
     @Transactional
     public ExamArrangement saveExamArrangement(ExamArrangement e) { return examRepo.save(e); }
 

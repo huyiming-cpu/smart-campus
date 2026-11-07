@@ -21,7 +21,7 @@ public class CardController {
     private final CardService cardService;
     private final JwtUtil jwtUtil;
 
-    // ==================== 学生充值 ====================
+    // 1.学生充值
     @PostMapping("/student/card/recharge")
     public Result<Card> recharge(@RequestHeader("Authorization") String token,
                                   @RequestBody Map<String, Object> body) {
@@ -30,7 +30,7 @@ public class CardController {
         return Result.success(cardService.recharge(userId, amount));
     }
 
-    // ==================== 学生 S-12 / S-13 ====================
+  //2.学生一卡通
 
     @GetMapping("/student/card")
     public Result<Response.CardInfo> getMyCard(@RequestHeader("Authorization") String token) {
@@ -44,14 +44,14 @@ public class CardController {
         return Result.success(cardService.getMyPayments(userId));
     }
 
-    // ==================== 教师一卡通 T-12 ====================
+    // 3.教师一卡通
     @GetMapping("/teacher/card")
     public Result<Response.CardInfo> getTeacherCard(@RequestHeader("Authorization") String token) {
         Long userId = jwtUtil.getUserIdFromToken(token);
         return Result.success(cardService.getMyCard(userId));
     }
 
-    // ==================== 管理员 A-13 一卡通管理 ====================
+    // 4.管理员管理一卡通
 
     @GetMapping("/admin/cards")
     public Result<List<Card>> listAllCards() {
@@ -73,7 +73,7 @@ public class CardController {
         return Result.success(cardService.syncCardData());
     }
 
-    // ==================== 管理员 A-14 缴费管理 ====================
+    // 5.管理员缴费管理
 
     @GetMapping("/admin/payments")
     public Result<List<PaymentRecord>> listAllPayments(

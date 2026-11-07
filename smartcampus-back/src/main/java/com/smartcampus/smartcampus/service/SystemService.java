@@ -23,7 +23,7 @@ public class SystemService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
 
-    // ==================== A-02 仪表盘 ====================
+    //  仪表盘
     public Response.Dashboard getDashboard() {
         Response.Dashboard d = new Response.Dashboard();
         d.setTodayActiveUsers((int) loginLogRepository.countTodayActiveUsers());
@@ -33,7 +33,7 @@ public class SystemService {
         return d;
     }
 
-    // ==================== A-17 系统参数配置 ====================
+    // 系统参数配置
     public List<SysConfig> listConfigs(String configType) {
         if (configType != null && !configType.isEmpty()) return systemRepository.findByConfigType(configType);
         return systemRepository.findAll();
@@ -53,13 +53,13 @@ public class SystemService {
         if (rows == 0) throw new RuntimeException("配置不存在: " + key);
     }
 
-    // ==================== A-15 日志审计 ====================
+    // 日志审计
     public List<LoginLog> listLoginLogs(Long userId, int limit) {
         if (userId != null) return loginLogRepository.findByUserIdOrderByLoginTimeDesc(userId).stream().limit(limit).collect(Collectors.toList());
         return loginLogRepository.findAll().stream().sorted((a,b)->b.getLoginTime().compareTo(a.getLoginTime())).limit(limit).collect(Collectors.toList());
     }
 
-    // ==================== 通讯录 L-03 (enrich with user info) ====================
+    // 通讯录
 
     public List<Map<String, Object>> getDirectory(String department) {
         List<UserProfile> profiles;
@@ -82,7 +82,7 @@ public class SystemService {
         return result;
     }
 
-    // ==================== 固定资产 ====================
+    // 固定资产
     public List<FixedAsset> listAssets(String department) {
         if (department != null && !department.isEmpty()) return fixedAssetRepository.findByDepartment(department);
         return fixedAssetRepository.findAll();
@@ -124,7 +124,7 @@ public class SystemService {
         return stats;
     }
 
-    // ==================== 实验室 ====================
+    // 实验室
     public List<Lab> listLabs(String department, String status) {
         if (status != null) return labRepository.findByStatus(status);
         if (department != null) return labRepository.findByDepartment(department);
@@ -133,7 +133,7 @@ public class SystemService {
     @Transactional public Lab saveLab(Lab l) { return labRepository.save(l); }
     @Transactional public void deleteLab(Long id) { labRepository.deleteById(id); }
 
-    // ==================== L-08 新生报到统计 ====================
+    // 新生报到统计
     public List<Response.StatCard> enrollmentStats(String department) {
         List<IdentityRegistry> list = identityRegistryRepository.findAll();
         if (department != null && !department.isEmpty()) list = list.stream().filter(r -> department.equals(r.getDepartment())).collect(Collectors.toList());
@@ -148,7 +148,7 @@ public class SystemService {
         return stats;
     }
 
-    // ==================== L-11 在校生总量统计 ====================
+    // 在校生总量统计
     public List<Response.DeptStudents> studentCountStats(String department) {
         // 只查学生
         List<UserProfile> allProfiles = userProfileRepository.findAll();
@@ -203,7 +203,7 @@ public class SystemService {
 
     private Response.StatCard statCard(String l, String v, String e) { Response.StatCard c=new Response.StatCard();c.setLabel(l);c.setValue(v);c.setExtra(e);return c; }
 
-    // ==================== L-09 注册缴费统计 ====================
+    // 注册缴费统计
     private final PaymentRecordRepository paymentRepo;
     public Response.PaymentStats paymentStats(String department) {
         Response.PaymentStats s = new Response.PaymentStats();

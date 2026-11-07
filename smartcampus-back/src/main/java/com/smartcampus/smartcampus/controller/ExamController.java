@@ -19,7 +19,7 @@ public class ExamController {
     private final ExamService examService;
     private final JwtUtil jwtUtil;
 
-    // ==================== S-08 考试安排 ====================
+    // 考试安排
     @GetMapping("/student/exams")
     public Result<List<ExamArrangement>> getExamArrangements(
             @RequestParam(defaultValue = "2025-2026-2") String semester) {
@@ -33,7 +33,7 @@ public class ExamController {
         return Result.success(examService.getSupervisorExams(jwtUtil.getUserIdFromToken(token), semester));
     }
 
-    // ==================== S-09 评教 ====================
+    //  评教
     @GetMapping("/student/evaluations")
     public Result<List<Map<String, Object>>> getMyEvaluations(
             @RequestHeader("Authorization") String token,
@@ -55,20 +55,20 @@ public class ExamController {
         return Result.success(examService.getTeacherEvaluations(jwtUtil.getUserIdFromToken(token), semester));
     }
 
-    /** L-12 评教统计 */
+    //评教统计
     @GetMapping("/leader/evaluation-stats")
     public Result<List<Response.EvalStat>> evaluationStats(@RequestHeader("Authorization") String token) {
         return Result.success(examService.evaluationStats(dept(token)));
     }
 
-    /** 领导部门（校办=全校，其他=本院） */
+    //领导部门（
     private String dept(String token) {
         String d = userProfileRepo.findById(jwtUtil.getUserIdFromToken(token)).map(UserProfile::getDepartment).orElse("校办");
         return "校办".equals(d) ? null : d;
     }
     private final UserProfileRepository userProfileRepo;
 
-    // ==================== S-11 等级考试 ====================
+    // 等级考试
     @GetMapping("/student/level-exams")
     public Result<List<LevelExam>> listLevelExams(@RequestParam(required = false) String status) {
         return Result.success(examService.listLevelExams(status));
@@ -87,7 +87,7 @@ public class ExamController {
         return Result.success(examService.getMyExamRegistrations(jwtUtil.getUserIdFromToken(token)));
     }
 
-    // ==================== A-12 管理员考试管理 ====================
+    // 管理员考试管理
     @PostMapping("/admin/exams")
     public Result<ExamArrangement> saveExamArrangement(@RequestBody ExamArrangement e) {
         return Result.success(examService.saveExamArrangement(e));

@@ -20,7 +20,7 @@ public class CourseController {
     private final JwtUtil jwtUtil;
     private final CourseSelectConfig courseSelectConfig;
 
-    // ==================== 学生 ====================
+    // 1.学生
     @GetMapping("/student/schedule")
     public Result<List<CourseSchedule>> getStudentSchedule(
             @RequestHeader("Authorization") String token,
@@ -51,13 +51,13 @@ public class CourseController {
         return Result.success(courseService.applyRetake(jwtUtil.getUserIdFromToken(token), body));
     }
 
-    /** 教师/辅导员审批补考申请 */
+    // 2. 教师/辅导员审批补考申请
     @PutMapping("/teacher/retakes/{id}/approve")
     public Result<StudentRetake> approveRetake(@PathVariable Long id, @RequestBody Map<String, String> body) {
         return Result.success(courseService.approveRetake(id, body.get("status")));
     }
 
-    // ==================== 教师 ====================
+        // 3.教师
     @GetMapping("/teacher/schedule")
     public Result<List<CourseSchedule>> getTeacherSchedule(
             @RequestHeader("Authorization") String token,
@@ -70,7 +70,7 @@ public class CourseController {
         return Result.success(courseService.getClassRoster(scheduleId));
     }
 
-    /** T-13 教师查看所授课程选课情况 */
+    //4.教师查看所授课程选课情况
     @GetMapping("/teacher/enrollment")
     public Result<List<Map<String, Object>>> getTeacherEnrollment(
             @RequestHeader("Authorization") String token,
@@ -88,7 +88,7 @@ public class CourseController {
                 body.get("operatorName")));
     }
 
-    // ==================== 管理员 ====================
+    // 5.管理员
     @GetMapping("/admin/courses")
     public Result<List<Course>> listAllCourses(
             @RequestParam(required = false) String department,
@@ -147,7 +147,7 @@ public class CourseController {
         courseService.dropStudent(id); return Result.success();
     }
 
-    /** 教师端退课 */
+    //6.教师端退课
     @PutMapping("/teacher/student-courses/{id}/drop")
     public Result<Void> teacherDropStudent(@PathVariable Long id) {
         courseService.dropStudent(id); return Result.success();

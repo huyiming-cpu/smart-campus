@@ -23,33 +23,33 @@ public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
-    // ==================== 1. 登录 ====================
+    // 1. 登录
     @PostMapping("/auth/login")
     public Result<Response.Login> login(@RequestBody Request.Login request) {
         return Result.success(userService.login(request));
     }
 
-    // ==================== 2. 注册 ====================
+    // 2. 注册
     @PostMapping("/auth/register")
     public Result<Void> register(@RequestBody Request.Register request) {
         userService.register(request);
         return Result.success();
     }
 
-    // ==================== 3. 查个人信息 ====================
+    // 3. 查个人信息
     @GetMapping("/user/profile")
     public Result<Response.UserProfile> getProfile(@RequestHeader("Authorization") String token) {
         Long userId = jwtUtil.getUserIdFromToken(token);
         return Result.success(userService.getProfile(userId));
     }
 
-    /** 管理员查看任意用户信息 */
+
     @GetMapping("/admin/user-profile/{userId}")
     public Result<Response.UserProfile> getUserProfile(@PathVariable Long userId) {
         return Result.success(userService.getProfile(userId));
     }
 
-    // ==================== 4. 改个人信息 ====================
+    // 4. 改个人信息
     @PutMapping("/user/profile")
     public Result<Void> updateProfile(@RequestHeader("Authorization") String token,
                                        @RequestBody Request.UpdateProfile request) {
@@ -58,7 +58,7 @@ public class UserController {
         return Result.success();
     }
 
-    // ==================== 修改密码 ====================
+    // 修改密码
     @PutMapping("/user/change-password")
     public Result<Void> changePassword(@RequestHeader("Authorization") String token,
                                         @RequestBody Map<String, String> body) {
@@ -67,7 +67,7 @@ public class UserController {
         return Result.success();
     }
 
-    // ==================== A-03 用户管理 ====================
+    //  用户管理
     @GetMapping("/admin/users")
     public Result<List<Map<String, Object>>> listAllUsers() {
         return Result.success(userService.listAllUsers());
@@ -95,7 +95,7 @@ public class UserController {
         return Result.success();
     }
 
-    // ==================== A-04 注册审核 ====================
+    // 注册审核
     @GetMapping("/admin/register-applications")
     public Result<List<RegisterApplication>> listRegisterApplications(
             @RequestParam(required = false) String status) {
@@ -115,13 +115,13 @@ public class UserController {
         return Result.success(userService.countPendingRegistrations());
     }
 
-    // ==================== A-05/A-06 角色 & L-03 通讯录 ====================
+
     @GetMapping("/admin/roles")
     public Result<List<Role>> getAllRoles() {
         return Result.success(userService.getAllRoles());
     }
 
-    // ==================== 头像上传 ====================
+    // 头像上传
     @PostMapping("/user/avatar")
     public Result<String> uploadAvatar(@RequestHeader("Authorization") String token,
                                         @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {

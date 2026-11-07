@@ -34,3 +34,8 @@ jwt:
 # DeepSeek AI
 deepseek:
   api-key: 你的DeepSeek密钥
+
+# 数据初始化
+app:
+  data-init:
+    school-calendar: true

@@ -53,7 +53,7 @@
                 {{ userStore.userInfo?.name || '老师' }}，欢迎回来
               </h1>
               <p class="hero-subtitle">智慧校园，让教学管理更高效、更便捷</p>
-              <div class="hero-search">
+              <div class="hero-search" style="position:relative">
                 <el-icon class="search-icon"><Search /></el-icon>
                 <input
                   v-model="searchKeyword"
@@ -61,11 +61,19 @@
                   placeholder="搜索课程、通知、学生信息..."
                   class="search-input"
                   @keyup.enter="onSearch"
+                  @focus="showSuggestions = true"
                 />
                 <button class="search-btn" @click="onSearch">搜索</button>
+                <SearchSuggestions
+                  :keyword="searchKeyword"
+                  role="TEACHER"
+                  :visible="showSuggestions && searchKeyword.length >= 2"
+                  @navigate="handleSuggestionNavigate"
+                  @close="showSuggestions = false"
+                />
               </div>
               <div class="hero-tags">
-                <span class="hero-tag" @click="router.push('/teacher/schedule')">📅 校历查询</span>
+                <span class="hero-tag" @click="router.push('/teacher/calendar')">📅 校历查询</span>
                 <span class="hero-tag" @click="router.push('/teacher/schedule')">📖 课表查看</span>
                 <span class="hero-tag" @click="router.push('/teacher/scores')">🎓 成绩管理</span>
                 <span class="hero-tag" @click="router.push('/teacher/research')">🔬 科研项目</span>
@@ -260,6 +268,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
 import request from '@/utils/request'
+import SearchSuggestions from '@/components/SearchSuggestions.vue'
 import {
   Search, ArrowRight, ArrowLeft, Notebook,
   School, Timer, Medal, DocumentChecked,
@@ -270,6 +279,8 @@ const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 const searchKeyword = ref('')
+const showSuggestions = ref(false)
+const selectedUrl = ref('')
 
 const news = ref([])
 
@@ -366,9 +377,22 @@ const loadInfo = async () => {
   } catch {}
 }
 
+const handleSuggestionNavigate = (url, title) => {
+  searchKeyword.value = title
+  selectedUrl.value = url
+  showSuggestions.value = false
+  router.push(url)
+}
+
 const onSearch = () => {
   if (searchKeyword.value.trim()) {
-    router.push(`/teacher/announcement?keyword=${encodeURIComponent(searchKeyword.value)}`)
+    if (selectedUrl.value) {
+      router.push(selectedUrl.value)
+      selectedUrl.value = ''
+    } else {
+      router.push(`/teacher/announcement?keyword=${encodeURIComponent(searchKeyword.value)}`)
+    }
+    showSuggestions.value = false
   }
 }
 

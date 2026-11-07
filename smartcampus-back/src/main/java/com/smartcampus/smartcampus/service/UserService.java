@@ -32,7 +32,7 @@ public class UserService {
     private final RegisterApplicationRepository registerApplicationRepository;
     private final JwtUtil jwtUtil;
 
-    // ==================== 1. 登录 ====================
+    // 1. 登录
     public Response.Login login(Request.Login request) {
         User user = userRepository.findByIdentityNumber(request.getIdentityNumber())
                 .orElseThrow(() -> new RuntimeException("账号或密码错误"));
@@ -58,7 +58,7 @@ public class UserService {
         return resp;
     }
 
-    // ==================== 2. 注册 ====================
+    //  2. 注册
     @Transactional
     public void register(Request.Register request) {
         if (userRepository.existsByIdentityNumber(request.getIdentityNumber()))
@@ -104,7 +104,7 @@ public class UserService {
         identityRegistryRepository.save(registry);
     }
 
-    // ==================== 3. 查个人信息 ====================
+    // 3. 查个人信息
     public Response.UserProfile getProfile(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("用户不存在"));
@@ -133,7 +133,7 @@ public class UserService {
         return resp;
     }
 
-    // ==================== 4. 改个人信息 ====================
+    // 4. 改个人信息
     @Transactional
     public void updateProfile(Long userId, Request.UpdateProfile request) {
         User user = userRepository.findById(userId)
@@ -163,7 +163,7 @@ public class UserService {
         userProfileRepository.save(profile);
     }
 
-    // ==================== 修改密码 ====================
+    //  修改密码
     @Transactional
     public void changePassword(Long userId, String oldPassword, String newPassword) {
         User user = userRepository.findById(userId)
@@ -174,7 +174,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    // ==================== A-03 用户管理（管理员） ====================
+    // 用户管理
     public List<Map<String, Object>> listAllUsers() {
         List<User> users = userRepository.findAllUsers();
         List<Map<String, Object>> result = new ArrayList<>();
@@ -236,7 +236,7 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    // ==================== A-04 注册审核 ====================
+    // 注册审核
     public List<RegisterApplication> listRegisterApplications(String status) {
         if (status != null) return registerApplicationRepository.findByStatusOrderByApplyTimeDesc(status);
         return registerApplicationRepository.findAll();
@@ -257,7 +257,7 @@ public class UserService {
         return registerApplicationRepository.countByStatus("PENDING");
     }
 
-    // ==================== A-05/A-06 角色权限 + L-03 通讯录 ====================
+    // 通讯录
     public List<UserProfile> getAllProfiles(String department) {
         if (department != null) return userProfileRepository.findByDepartment(department);
         return userProfileRepository.findAll();

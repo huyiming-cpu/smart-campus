@@ -18,7 +18,7 @@ public class TeacherService {
     private final ScientificResearchRepository researchRepo;
     private final GraduationDesignRepository designRepo;
 
-    // ==================== 科研 T-07 ====================
+    // 科研
     public List<ScientificResearch> listMyResearch(Long teacherId) {
         return researchRepo.findByTeacherIdOrderByStartDateDesc(teacherId);
     }
@@ -42,7 +42,7 @@ public class TeacherService {
     @Transactional
     public void deleteResearch(Long id) { researchRepo.deleteById(id); }
 
-    /** L-06: 领导查看科研总览（department=null=全部） */
+    //领导查看科研总览
     public List<Map<String, Object>> listAllResearch(String department, String status) {
         List<ScientificResearch> list;
         if (status != null) list = researchRepo.findByStatusOrderByStartDateDesc(status);
@@ -76,7 +76,7 @@ public class TeacherService {
     private final UserRepository userRepo;
     private final UserProfileRepository userProfileRepo;
 
-    // ==================== 毕业设计 T-08 ====================
+    // 毕业设计
     public List<Map<String, Object>> listMyDesigns(Long teacherId) {
         List<GraduationDesign> list = designRepo.findByTeacherIdOrderBySubmitTimeDesc(teacherId);
         return enrichDesigns(list);
@@ -126,7 +126,7 @@ public class TeacherService {
         return enrichDesign(d);
     }
 
-    /** 学生提交/修改毕业设计选题 */
+
     @Transactional
     public Map<String, Object> submitDesign(Long studentId, Map<String, Object> body) {
         // 一个学生只能有一个进行中的毕设
@@ -151,7 +151,7 @@ public class TeacherService {
         return enrichDesign(d);
     }
 
-    /** 获取学生本学院的教师列表 */
+    //获取学生本学院的教师列表
     public List<Map<String, Object>> getDepartmentTeachers(Long studentId) {
         UserProfile sp = userProfileRepo.findById(studentId).orElse(null);
         String dept = sp != null ? sp.getDepartment() : "计算机学院";
@@ -171,7 +171,7 @@ public class TeacherService {
             });
         }
         if (result.isEmpty()) {
-            // fallback: return all teachers
+
             List<User> allUsers = userRepo.findAllUsers();
             for (User u : allUsers) {
                 List<Role> roles = userRepo.findRolesByUserId(u.getId());
